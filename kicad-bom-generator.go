@@ -2,10 +2,13 @@ package main
 
 import (
 	"flag"
+	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Logger"
+	"kicad-bom-generator/Parser"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 var log = Logger.New()
@@ -14,9 +17,9 @@ var log = Logger.New()
 // the program
 func main() {
 	// Get the current directory to search for KiCad files
-	wd, err := os.Getwd()
-	if err != nil {
-		(Errors.NewFatal(err.Error())).Handle()
+	wd, errGetwd := os.Getwd()
+	if errGetwd != nil {
+		(Errors.NewFatal(errGetwd.Error())).Handle()
 	}
 
 	// Command line arguments
@@ -42,20 +45,48 @@ func main() {
 		log.EnableDebug()
 	}
 
-	getSchematicFilesFrom(*directory)
+	// Verify that the directory given is home to a KiCad project (*.pro file)
+	validDir := checkForKiCadProject(*directory)
+	if validDir == false {
+		(Errors.NewFatal("Directory does not contain a KiCad Project")).Handle()
+	}
+
+	// Get schematic files from the directory
+	files, err := getSchematicFilesFrom(*directory)
+	err.Handle()
+
+	var components []*DataTypes.KiCadComponent
+
+	for i := range files {
+		components = append(components, Parser.GetComponents(files[i])...)
+	}
+
+	// Adjust quantitiy values after parsing all the files
+	components = Parser.ChangeQuantities(components)
+
+	for i := range components {
+		component := components[i]
+		log.Info("Component: ", component.Name)
+		log.Info("Footprint: ", component.Footprint)
+		log.Info("Value: ", component.Value)
+		log.Info("Quantity: ", strconv.Itoa(component.Quantity))
+		log.Log("")
+	}
+
 }
 
 // getSchematicFilesFrom returns a list of all the schematic files in a
 // directory (searches recursively)
-func getSchematicFilesFrom(dir string) {
+func getSchematicFilesFrom(dir string) ([]string, Errors.Error) {
 	log.Log("Finding KiCad Schematic Files In: ", dir)
 
 	files := getFilesWithExtension(dir, ".sch")
 
-	for i := range files {
-		file := files[i]
-		log.Info(file)
+	if len(files) == 0 {
+		return files, Errors.NewWarning("No Schematic Files Found")
 	}
+
+	return files, Errors.None()
 }
 
 // getFilesWithExtension finds file recursively in a folder with a specific
@@ -72,7 +103,7 @@ func getFilesWithExtension(directory string, extension string) []string {
 		if file.IsDir() == false {
 			if filepath.Ext(path) == extension {
 				// Found a file!
-				log.Verbose("Found File: ", path)
+				log.Verbose("Found Schematic: ", path)
 				files = append(files, path)
 			}
 		}
@@ -85,4 +116,16 @@ func getFilesWithExtension(directory string, extension string) []string {
 	}
 
 	return files
+}
+
+// checkForKiCadProject is responsible for determining if the directory
+// given by the user contains a KiCad project
+func checkForKiCadProject(directory string) bool {
+	log.Verbose("Checking for KiCad Project file in ", directory)
+	f, _ := filepath.Glob(filepath.Join(directory, "*.pro"))
+	if len(f) == 0 {
+		return false
+	}
+
+	return true
 }

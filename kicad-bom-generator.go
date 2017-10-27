@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Formatters"
@@ -28,7 +27,7 @@ func main() {
 	verbose := flag.Bool("verbose", false, "Enables verbose logging")
 	debug := flag.Bool("debug", false, "Enable debugging mode")
 
-	//stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
+	stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
 	excel := flag.Bool("excel", true, "Format output as an Excel document")
 	json := flag.Bool("json", false, "Format output as  JSON")
 	csv := flag.Bool("csv", false, "Format output as Comma Separated Values")
@@ -53,7 +52,7 @@ func main() {
 	}
 
 	// Get the output formatter
-	formatter := Formatters.GetFormatter(*excel, *json, *csv)
+	formatter := Formatters.GetFormatter(*excel, *json, *csv, *stdout)
 
 	// Verify that the directory given is home to a KiCad project (*.pro file)
 	validDir := checkForKiCadProject(*directory)
@@ -65,9 +64,8 @@ func main() {
 	files, err := getSchematicFilesFrom(*directory)
 	err.Handle()
 
-	var components []*DataTypes.KiCadComponent
-
 	// Parse components from each file
+	var components []*DataTypes.KiCadComponent
 	for i := range files {
 		components = append(components, Parser.GetComponents(files[i])...)
 	}
@@ -76,7 +74,7 @@ func main() {
 	components = Parser.ChangeQuantities(components)
 
 	// Finally, we can now format the output
-	fmt.Print(formatter(components))
+	formatter(components)
 }
 
 // getSchematicFilesFrom returns a list of all the schematic files in a

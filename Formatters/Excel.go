@@ -7,6 +7,21 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
+// Style for header
+var headerStyle = &xlsx.Style{
+	Alignment: xlsx.Alignment{Horizontal: "center", Vertical: "center"},
+	Border:    xlsx.Border{Left: "none", Top: "none", Bottom: "medium", Right: "none"},
+	Fill:      *xlsx.DefaultFill(),
+	Font:      xlsx.Font{Size: 16, Bold: true},
+}
+
+var cellStyle = &xlsx.Style{
+	Alignment: xlsx.Alignment{Horizontal: "center", Vertical: "center"},
+	Border:    *xlsx.DefaultBorder(),
+	Fill:      *xlsx.DefaultFill(),
+	Font:      *xlsx.DefaultFont(),
+}
+
 // formatExcel formats a component list as an Excel document
 func formatExcel(components []*DataTypes.KiCadComponent) interface{} {
 	file := xlsx.NewFile()
@@ -19,6 +34,8 @@ func formatExcel(components []*DataTypes.KiCadComponent) interface{} {
 	for i := range props {
 		cell := row.AddCell()
 		cell.Value = props[i]
+
+		cell.SetStyle(headerStyle)
 	}
 
 	// Add all the components
@@ -29,6 +46,8 @@ func formatExcel(components []*DataTypes.KiCadComponent) interface{} {
 		for j := range props {
 			cell := row.AddCell()
 			cell.Value = component.Get(props[j])
+
+			cell.SetStyle(cellStyle)
 		}
 	}
 

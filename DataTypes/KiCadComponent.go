@@ -2,6 +2,11 @@
 // Componet is a data type that represents a component
 package DataTypes
 
+import (
+	"strconv"
+	"strings"
+)
+
 // KiCadComponent is a struct that represents a component in KiCad
 type KiCadComponent struct {
 	Name            string
@@ -35,4 +40,31 @@ func (component KiCadComponent) Equals(other *KiCadComponent) bool {
 	return component.Footprint == other.Footprint &&
 		component.FootprintSource == other.FootprintSource &&
 		component.Value == other.Value
+}
+
+// GetComponentProperties is used by formatters to retrieve the text value
+// that should be the header names for each property
+// If you do not want a value to show up in the output, do not return it here
+// The order returned here is the order that things will go into the output
+func GetComponentProperties() []string {
+	return []string{"Name", "Reference", "Footprint", "Value", "Quantity"}
+}
+
+// Get is used by formatters, the name parameter will be whatever
+// value is returned by the GetComponentPropertyNames() function
+func (component KiCadComponent) Get(prop string) string {
+	switch strings.ToLower(prop) {
+	case "name":
+		return component.Name
+	case "reference":
+		return component.Reference
+	case "footprint":
+		return component.Footprint
+	case "value":
+		return component.Value
+	case "quantity":
+		return string(strconv.Itoa(component.Quantity))
+	default:
+		return ""
+	}
 }

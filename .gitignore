@@ -1,3 +1,8 @@
 # Extensions used by the make file for build outputs
 *.exe
 *.out
+
+# Ignore output formats
+*.xlsx
+*.json
+*.csv

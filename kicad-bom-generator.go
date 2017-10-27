@@ -29,8 +29,8 @@ func main() {
 	debug := flag.Bool("debug", false, "Enable debugging mode")
 
 	//stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
-	excel := flag.Bool("excel", false, "Format output as an Excel document")
-	json := flag.Bool("json", true, "Format output as  JSON")
+	excel := flag.Bool("excel", true, "Format output as an Excel document")
+	json := flag.Bool("json", false, "Format output as  JSON")
 	csv := flag.Bool("csv", false, "Format output as Comma Separated Values")
 
 	flag.Parse()

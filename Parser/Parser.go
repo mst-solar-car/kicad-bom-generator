@@ -133,7 +133,7 @@ func ChangeQuantities(list []*DataTypes.KiCadComponent) []*DataTypes.KiCadCompon
 
 			// Check if they are the same part
 			if part.Equals(c) {
-				qty = qty + 1 // Increase quantity
+				qty = qty + c.Quantity // Increase quantity
 
 				// Set to nil if not the part we are checking for
 				if part != c {

@@ -18,14 +18,14 @@ func NewKiCadComponent() *KiCadComponent {
 }
 
 // Copy is a copy constructor for KiCadComponents
-func (component KiCadComponent) Copy(other *KiCadComponent) *KiCadComponent {
+func (component KiCadComponent) Copy() *KiCadComponent {
 	newComponent := NewKiCadComponent()
-	newComponent.Name = other.Name
-	newComponent.Reference = other.Reference
-	newComponent.FootprintSource = other.FootprintSource
-	newComponent.Footprint = other.Footprint
-	newComponent.Value = other.Value
-	newComponent.Quantity = other.Quantity
+	newComponent.Name = component.Name
+	newComponent.Reference = component.Reference
+	newComponent.FootprintSource = component.FootprintSource
+	newComponent.Footprint = component.Footprint
+	newComponent.Value = component.Value
+	newComponent.Quantity = component.Quantity
 
 	return newComponent
 }

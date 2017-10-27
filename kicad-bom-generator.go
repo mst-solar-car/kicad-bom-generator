@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
+	"kicad-bom-generator/Formatters"
 	"kicad-bom-generator/Logger"
 	"kicad-bom-generator/Parser"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 var log = Logger.New()
@@ -26,6 +27,12 @@ func main() {
 	directory := flag.String("dir", wd, "Specify the directory to get files from")
 	verbose := flag.Bool("verbose", false, "Enables verbose logging")
 	debug := flag.Bool("debug", false, "Enable debugging mode")
+
+	//stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
+	excel := flag.Bool("excel", false, "Format output as an Excel document")
+	json := flag.Bool("json", true, "Format output as  JSON")
+	csv := flag.Bool("csv", false, "Format output as Comma Separated Values")
+
 	flag.Parse()
 
 	// Start the output with this super fancy header
@@ -45,6 +52,9 @@ func main() {
 		log.EnableDebug()
 	}
 
+	// Get the output formatter
+	formatter := Formatters.GetFormatter(*excel, *json, *csv)
+
 	// Verify that the directory given is home to a KiCad project (*.pro file)
 	validDir := checkForKiCadProject(*directory)
 	if validDir == false {
@@ -57,6 +67,7 @@ func main() {
 
 	var components []*DataTypes.KiCadComponent
 
+	// Parse components from each file
 	for i := range files {
 		components = append(components, Parser.GetComponents(files[i])...)
 	}
@@ -64,15 +75,8 @@ func main() {
 	// Adjust quantitiy values after parsing all the files
 	components = Parser.ChangeQuantities(components)
 
-	for i := range components {
-		component := components[i]
-		log.Info("Component: ", component.Name)
-		log.Info("Footprint: ", component.Footprint)
-		log.Info("Value: ", component.Value)
-		log.Info("Quantity: ", strconv.Itoa(component.Quantity))
-		log.Log("")
-	}
-
+	// Finally, we can now format the output
+	fmt.Print(formatter(components))
 }
 
 // getSchematicFilesFrom returns a list of all the schematic files in a

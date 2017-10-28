@@ -12,13 +12,10 @@ import (
 var log = Logger.New()
 var args = Arguments.Retrieve()
 
-// FormatterFunction defines a formatter callback
-type FormatterFunction func(components DataTypes.KiCadComponentList) interface{}
-
 // GetFormatter is a factory that returns a function that can be used to format
 // a BOM list
-func GetFormatter() FormatterFunction {
-	var formatFn FormatterFunction
+func GetFormatter() DataTypes.ComponentListFn {
+	var formatFn DataTypes.ComponentListFn
 
 	// Choose a formatting function to return
 	if args.Excel {
@@ -35,17 +32,15 @@ func GetFormatter() FormatterFunction {
 		(Errors.NewFatal("Unkown Formatter -- Output Formatter will not output anything")).Handle()
 	}
 
-	return formatterMiddleware(formatFn)
+	return Middleware.Wrap(formatWrapper(formatFn))
 }
 
-// formatterMiddleware is used for modifying the component list before it gets
-// sent to the actual formatter
-func formatterMiddleware(fn FormatterFunction) FormatterFunction {
+// formatWrapper returns a function that will apply a formatter to a list of components
+func formatWrapper(formatter DataTypes.ComponentListFn) DataTypes.ComponentListFn {
+	// When this return function is called, components will already have gone through
+	// middleware, so send them through the formatter function and do more stuff
 	return func(components DataTypes.KiCadComponentList) interface{} {
-		// Run the component list through middleware here
-		components = Middleware.SortMiddleware(components)
-
-		output := fn(components)
+		output := formatter(components)
 
 		if args.Json {
 			// TODO: Save to BOM.json
@@ -55,4 +50,5 @@ func formatterMiddleware(fn FormatterFunction) FormatterFunction {
 
 		return output
 	}
+
 }

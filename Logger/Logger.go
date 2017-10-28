@@ -83,9 +83,11 @@ func (logger Logger) Error(params ...string) {
 // Verbose is a member function that outputs a regular message when only in
 // verbose mode
 func (logger Logger) Verbose(params ...string) {
-	if logger.Level == Verbose {
-		print(color.FgWhite, params)
+	if logger.Level != Verbose {
+		return
 	}
+
+	print(color.FgWhite, params)
 }
 
 // Info prints informative messages out in blue
@@ -95,9 +97,11 @@ func (logger Logger) Info(params ...string) {
 
 // Debug is used for debugging statements
 func (logger Logger) Debug(params ...string) {
-	if logger.Debugging {
-		print(color.FgHiMagenta, append([]string{"DEBUG: "}, params...))
+	if !logger.Debugging {
+		return
 	}
+
+	print(color.FgHiMagenta, append([]string{"DEBUG: "}, params...))
 }
 
 // print is a helper function to allow printing with the mutex

@@ -3,46 +3,32 @@ package Formatters
 
 import (
 	"fmt"
+	"kicad-bom-generator/Arguments"
 	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Logger"
 	"kicad-bom-generator/Middleware"
 )
 
+var log = Logger.New()
+var args = Arguments.Retrieve()
+
 // FormatterFunction defines a formatter callback
 type FormatterFunction func(components DataTypes.KiCadComponentList) interface{}
 
-var log = Logger.New()
-
 // GetFormatter is a factory that returns a function that can be used to format
 // a BOM list
-func GetFormatter(excel bool, json bool, csv bool, stdout bool) FormatterFunction {
-	// Turn off Excel (since it defaults to true) if another is on
-	if json || csv {
-		excel = false
-	}
-
-	// Warn about excel and STDOUT
-	if excel && stdout {
-		stdout = false
-		log.Warn("Can not send output to STDOUT and use Excel formatting, will not output to STDOUT")
-	}
-
-	// Warn about multiple formatters specified
-	if json && csv {
-		log.Warn("Can only use one formatter, preference is given to JSON over CSV")
-	}
-
-	var formatFn FormatterFunction // Function that will be used in the closure
+func GetFormatter() FormatterFunction {
+	var formatFn FormatterFunction
 
 	// Choose a formatting function to return
-	if excel {
+	if args.Excel {
 		log.Verbose("Using the Excel Output Formatter")
 		formatFn = formatExcel
-	} else if json {
+	} else if args.Json {
 		log.Verbose("Using the JSON Output Formatter")
 		formatFn = formatJSON
-	} else if csv {
+	} else if args.Csv {
 		log.Verbose("Using the CSV Output Formatter")
 		formatFn = formatCSV
 	} else {
@@ -50,12 +36,12 @@ func GetFormatter(excel bool, json bool, csv bool, stdout bool) FormatterFunctio
 		(Errors.NewFatal("Unkown Formatter -- Output Formatter will not output anything")).Handle()
 	}
 
-	return formatterMiddleware(formatFn, json, csv, stdout)
+	return formatterMiddleware(formatFn)
 }
 
 // formatterMiddleware is used for modifying the component list before it gets
 // sent to the actual formatter
-func formatterMiddleware(fn FormatterFunction, json bool, csv bool, stdout bool) FormatterFunction {
+func formatterMiddleware(fn FormatterFunction) FormatterFunction {
 	return func(components DataTypes.KiCadComponentList) interface{} {
 		// Run the component list through middleware here
 		components = Middleware.SortMiddleware(components)
@@ -63,12 +49,12 @@ func formatterMiddleware(fn FormatterFunction, json bool, csv bool, stdout bool)
 		output := fn(components)
 
 		// Print to stdout
-		if stdout {
+		if args.Stdout {
 			fmt.Println(output)
 		} else {
-			if json {
+			if args.Json {
 				// TODO: Save to BOM.json
-			} else if csv {
+			} else if args.Csv {
 				// TODO: Save to BOM.csv
 			}
 		}

@@ -24,7 +24,6 @@ func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
 	group := sync.WaitGroup{}
 
 	var components DataTypes.KiCadComponentList // Complete list of components
-
 	for i := range files {
 		file := files[i]
 

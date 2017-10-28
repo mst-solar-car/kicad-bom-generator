@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	"kicad-bom-generator/Arguments"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Formatters"
 	"kicad-bom-generator/Logger"
@@ -11,28 +11,11 @@ import (
 )
 
 var log = Logger.New()
+var args = Arguments.Retrieve()
 
 // main is the main entry point for the program, it is executed when you run
 // the program
 func main() {
-	// Get the current directory to search for KiCad files
-	wd, errGetwd := os.Getwd()
-	if errGetwd != nil {
-		(Errors.NewFatal(errGetwd.Error())).Handle()
-	}
-
-	// Command line arguments
-	directory := flag.String("dir", wd, "Specify the directory to get files from")
-	verbose := flag.Bool("verbose", false, "Enables verbose logging")
-	debug := flag.Bool("debug", false, "Enable debugging mode")
-
-	stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
-	excel := flag.Bool("excel", true, "Format output as an Excel document")
-	json := flag.Bool("json", false, "Format output as  JSON")
-	csv := flag.Bool("csv", false, "Format output as Comma Separated Values")
-
-	flag.Parse()
-
 	// Start the output with this super fancy header
 	log.Success("=======================================")
 	log.Success("          KiCad BOM Generator          ")
@@ -40,27 +23,17 @@ func main() {
 	log.Success("             Michael Rouse             ")
 	log.Success("=======================================\n")
 
-	// Enable verbose logging if needed
-	if *verbose {
-		log.EnableVerbose()
-	}
-
-	// Enable debugging mode if needed
-	if *debug {
-		log.EnableDebug()
-	}
-
 	// Get the output formatter
-	formatter := Formatters.GetFormatter(*excel, *json, *csv, *stdout)
+	formatter := Formatters.GetFormatter()
 
 	// Verify that the directory given is home to a KiCad project (*.pro file)
-	validDir := checkForKiCadProject(*directory)
+	validDir := checkForKiCadProject(args.Directory)
 	if validDir == false {
-		(Errors.NewFatal("Directory " + *directory + " does not contain a KiCad Project")).Handle()
+		(Errors.NewFatal("Directory " + args.Directory + " does not contain a KiCad Project")).Handle()
 	}
 
 	// Get schematic files from the directory
-	files, err := getSchematicFilesFrom(*directory)
+	files, err := getSchematicFilesFrom(args.Directory)
 	err.Handle()
 
 	// Find all the components from all the files

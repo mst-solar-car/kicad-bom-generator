@@ -26,12 +26,15 @@ type Logger struct {
 var instance *Logger
 var once sync.Once
 
+var mutex *sync.Mutex
+
 // New is the constructor for the Logger object, it will return the instance
 // if one has already been created
 func New() *Logger {
 	// Create the first Logger object
 	once.Do(func() {
 		instance = &Logger{Level: Normal, Debugging: false}
+		mutex = &sync.Mutex{}
 	})
 
 	return instance
@@ -39,103 +42,74 @@ func New() *Logger {
 
 // EnableVerbose enables verbose logging on a logger
 func (logger *Logger) EnableVerbose() {
-	logger.Level = Verbose
-
-	logger.Warn("Verbose Logging Enabled")
+	mutex.Lock()
+	if logger.Level != Verbose {
+		logger.Level = Verbose
+		logger.Warn("Verbose Logging Enabled")
+	}
+	mutex.Unlock()
 }
 
 // EnableDebug allows for debugging statements to be output
 func (logger *Logger) EnableDebug() {
-	logger.Debugging = true
-
-	logger.Warn("Debug mode Enabled")
+	mutex.Lock()
+	if logger.Debugging == false {
+		logger.Debugging = true
+		logger.Warn("Debug mode Enabled")
+	}
+	mutex.Unlock()
 }
 
 // Warn is a member of Logger that outputs a warning message (in yellow)
 func (logger Logger) Warn(params ...string) {
-	headline := color.New(color.FgYellow, color.Bold)
-
-	msg := "WARNING: "
-	for i := range params {
-		msg = msg + params[i]
-	}
-
-	headline.Println(msg)
+	print(color.FgYellow, append([]string{"WARNING: "}, params...))
 }
 
 // Log is a member of Logger that outputs a regular message (in white)
 func (logger Logger) Log(params ...string) {
-	headline := color.New(color.FgHiWhite)
-
-	msg := ""
-	for i := range params {
-		msg = msg + params[i]
-	}
-
-	headline.Println(msg)
+	print(color.FgHiWhite, params)
 }
 
 // Success is a member function that outputs a message in green
 func (logger Logger) Success(params ...string) {
-	headline := color.New(color.FgHiGreen)
-
-	msg := ""
-	for i := range params {
-		msg = msg + params[i]
-	}
-
-	headline.Println(msg)
+	print(color.FgHiGreen, params)
 }
 
 // Error is a member function that outputs a message in red
 func (logger Logger) Error(params ...string) {
-	headline := color.New(color.FgHiRed)
-
-	msg := "ERROR: "
-	for i := range params {
-		msg = msg + params[i]
-	}
-
-	headline.Println(msg)
+	print(color.FgHiRed, append([]string{"ERROR: "}, params...))
 }
 
 // Verbose is a member function that outputs a regular message when only in
 // verbose mode
 func (logger Logger) Verbose(params ...string) {
 	if logger.Level == Verbose {
-		headline := color.New(color.FgWhite)
-
-		msg := ""
-		for i := range params {
-			msg = msg + params[i]
-		}
-
-		headline.Println(msg)
+		print(color.FgWhite, params)
 	}
 }
 
 // Info prints informative messages out in blue
 func (logger Logger) Info(params ...string) {
-	headline := color.New(color.FgHiCyan)
-
-	msg := "INFO: "
-	for i := range params {
-		msg = msg + params[i]
-	}
-
-	headline.Println(msg)
+	print(color.FgHiCyan, append([]string{"INFO: "}, params...))
 }
 
 // Debug is used for debugging statements
 func (logger Logger) Debug(params ...string) {
 	if logger.Debugging {
-		headline := color.New(color.FgHiMagenta)
-
-		msg := "DEBUG: "
-		for i := range params {
-			msg = msg + params[i]
-		}
-
-		headline.Println(msg)
+		print(color.FgHiMagenta, append([]string{"DEBUG: "}, params...))
 	}
+}
+
+// print is a helper function to allow printing with the mutex
+func print(clr color.Attribute, strs []string) {
+	mutex.Lock()
+	headline := color.New(clr)
+
+	msg := ""
+	for i := range strs {
+		msg = msg + strs[i]
+	}
+
+	headline.Println(msg)
+	mutex.Unlock()
 }

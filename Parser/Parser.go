@@ -14,9 +14,6 @@ import (
 
 var log = Logger.New()
 
-// activeComponent is a variable representing the current component being parsed
-var activeComponent *DataTypes.KiCadComponent
-
 // GetComponentsFromFiles is a function that abstracts away calling GetComponents
 // for multiple files
 func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
@@ -58,9 +55,11 @@ func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 
 	var components DataTypes.KiCadComponentList // List of components found
 
+	generator := componentGenerator() // Get a generator closure
+
 	for line := range readLine(schematicFile) {
 		// Send each line to the component generator to get components
-		component := componentGenerator(line)
+		component := generator(line)
 
 		// Add a component if one has been found
 		if component != nil {
@@ -71,73 +70,77 @@ func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 	return components.CombineComponents()
 }
 
-// componentGenerator is called when reading lines that define a component
-// and it builds the structure to the componet. When fully read then it will
-// return that component. Until the line $EndComp is read then this will
-// return nil
-func componentGenerator(line string) *DataTypes.KiCadComponent {
-	// If the line $Comp is read then we need to start a component
-	if line == "$Comp" {
-		activeComponent = DataTypes.NewKiCadComponent()
+type componentGeneratorFn func(line string) *DataTypes.KiCadComponent
 
-		return nil
-	}
+// componentGenerator returns a function closure that will accept a line of text
+// and is called for every line in the file, it will parse each line and build
+// a component and return a pointer to that component when one is found
+func componentGenerator() componentGeneratorFn {
+	var activeComponent *DataTypes.KiCadComponent
 
-	// If the line $EndComp is read then we are at the end of a component
-	if line == "$EndComp" {
-		//	log.Debug("Parsed Component ", activeComponent.Name)
-		activeComponent.Quantity = 1 // Initial Quantity
+	// Return a function that will read in lines and generate components
+	return func(line string) *DataTypes.KiCadComponent {
+		// The Line $Comp begins the definition of a component
+		if line == "$Comp" {
+			activeComponent = DataTypes.NewKiCadComponent()
+			return nil
+		}
 
-		cpy := activeComponent
-		activeComponent = nil
+		// If the line $EndComp is found then that component definition is over
+		if line == "$EndComp" && activeComponent != nil {
+			activeComponent.Quantity = 1
 
-		return cpy
-	}
+			cpy := activeComponent
+			activeComponent = nil
 
-	// If not $Comp and not $EndComp, but activeCompent is nill then we know
-	// that we are not reading a line that deals with a component
-	if activeComponent == nil {
-		return nil
-	}
+			return cpy
+		}
 
-	// At this point in the function we are parsing a line that specifies
-	// a component, handle it and update activeComponent accordingly
-	words := strings.Split(strings.TrimSpace(line), " ") // Split at spaces
+		// If not $Comp and not $EndComp, but activeCompent is nill then we know
+		// that we are not reading a line that deals with a component
+		if activeComponent == nil {
+			return nil
+		}
+		// At this point in the function we are parsing a line that specifies
+		// a component, handle it and update activeComponent accordingly
+		words := strings.Split(strings.TrimSpace(line), " ") // Split at spaces
 
-	// Sanity check
-	if len(words) < 3 {
-		log.Warn("Found an invalid line when parsing component: ", line)
-		activeComponent = nil
-		return nil
-	}
+		// Sanity check
+		if len(words) < 3 {
+			log.Warn("Found an invalid line when parsing component: ", line)
+			activeComponent = nil
 
-	switch words[0] {
-	// Lines that start with L contain the component name and reference
-	case "L":
-		activeComponent.Name = stripQuotes(words[1])
-		activeComponent.Reference = stripQuotes(words[2])
+			return nil
+		}
 
-	// Lines that start with f are other specs about the component
-	case "F":
-		// F 1... specifies component value
-		if words[1] == "1" {
-			activeComponent.Value = stripQuotes(words[2])
+		switch words[0] {
+		// Lines that start with L contain the component name and reference
+		case "L":
+			activeComponent.Name = stripQuotes(words[1])
+			activeComponent.Reference = stripQuotes(words[2])
 
-		} else if words[1] == "2" {
-			// F 2... specifies footprints
-			footprint := stripQuotes(words[2]) // Remove quotes
-			footprintWords := strings.Split(footprint, ":")
+		// Lines that start with f are other specs about the component
+		case "F":
+			// F 1... specifies component value
+			if words[1] == "1" {
+				activeComponent.Value = stripQuotes(words[2])
 
-			if len(footprintWords) >= 2 {
-				activeComponent.FootprintSource = footprintWords[0]
-				activeComponent.Footprint = strings.Join(footprintWords[1:len(footprintWords)], ":")
-			} else {
-				activeComponent.Footprint = footprint
+			} else if words[1] == "2" {
+				// F 2... specifies footprints
+				footprint := stripQuotes(words[2]) // Remove quotes
+				footprintWords := strings.Split(footprint, ":")
+
+				if len(footprintWords) >= 2 {
+					activeComponent.FootprintSource = footprintWords[0]
+					activeComponent.Footprint = strings.Join(footprintWords[1:len(footprintWords)], ":")
+				} else {
+					activeComponent.Footprint = footprint
+				}
 			}
 		}
-	}
 
-	return nil
+		return nil
+	}
 }
 
 // readLine is a generator that will return the contents of the file line by

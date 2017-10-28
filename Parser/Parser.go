@@ -150,13 +150,9 @@ func ChangeQuantities(list []*DataTypes.KiCadComponent) []*DataTypes.KiCadCompon
 	// finalList is the completed list of components
 	var finalList []*DataTypes.KiCadComponent
 
-	// findQty is a lambda function used to count the number of times a component
-	// appears in list.
-	// When a component is counted then it will be set to nil in the list,
-	// to reduce complexity of this algorithm
-	findQty := func(part *DataTypes.KiCadComponent) int {
-		qty := 0
-
+	// combineWithOthers is a lambda that will look through the list of components
+	// and combine ones that are similar with the part passed to it
+	combineWithOthers := func(part *DataTypes.KiCadComponent) {
 		for i := range list {
 			c := list[i]
 
@@ -165,19 +161,14 @@ func ChangeQuantities(list []*DataTypes.KiCadComponent) []*DataTypes.KiCadCompon
 				continue
 			}
 
-			// Check if they are the same part
-			if part.Equals(c) {
-				qty = qty + c.Quantity // Increase quantity
-
-				// Set to nil if not the part we are checking for
-				if part != c {
-					log.Debug("Setting to nil")
-					list[i] = nil
-				}
+			// Check if they are the same part (but not the same pointer)
+			if part.Equals(c) && part != c {
+				// Combine quantity and reference
+				part.Combine(c)
+				log.Debug("Setting to nil")
+				list[i] = nil
 			}
 		}
-
-		return qty
 	}
 
 	// Loop through the component list
@@ -189,7 +180,7 @@ func ChangeQuantities(list []*DataTypes.KiCadComponent) []*DataTypes.KiCadCompon
 			continue
 		}
 
-		component.Quantity = findQty(component)
+		combineWithOthers(component)
 		finalList = append(finalList, component)
 	}
 

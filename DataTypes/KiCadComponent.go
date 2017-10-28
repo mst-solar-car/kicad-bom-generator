@@ -42,6 +42,15 @@ func (component KiCadComponent) Equals(other *KiCadComponent) bool {
 		component.Value == other.Value
 }
 
+// Combine will combine quantities, and references of two components that
+// are the same
+func (component *KiCadComponent) Combine(other *KiCadComponent) {
+	if component.Equals(other) && component != other {
+		component.Reference = component.Reference + ", " + other.Reference
+		component.Quantity = component.Quantity + other.Quantity
+	}
+}
+
 // GetComponentProperties is used by formatters to retrieve the text value
 // that should be the header names for each property
 // If you do not want a value to show up in the output, do not return it here

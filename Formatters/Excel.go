@@ -3,6 +3,8 @@ package Formatters
 
 import (
 	"kicad-bom-generator/DataTypes"
+	"os"
+	"path/filepath"
 
 	"github.com/tealeg/xlsx"
 )
@@ -51,7 +53,9 @@ func formatExcel(components []*DataTypes.KiCadComponent) interface{} {
 		}
 	}
 
-	file.Save("BOM.xlsx")
+	path, _ := os.Getwd()
+
+	file.Save(filepath.Join(path, "BOM.xlsx"))
 
 	return "BOM.xlsx"
 }

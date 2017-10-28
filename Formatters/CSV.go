@@ -1,7 +1,10 @@
 // Package Formatters defines formatters to format output
 package Formatters
 
-import "kicad-bom-generator/DataTypes"
+import (
+	"kicad-bom-generator/DataTypes"
+	"strings"
+)
 
 // formatCSV formats a component list as CSV
 func formatCSV(components DataTypes.KiCadComponentList) interface{} {
@@ -24,7 +27,7 @@ func formatCSV(components DataTypes.KiCadComponentList) interface{} {
 		component := components[i]
 
 		for j := range props {
-			result += component.Get(props[j])
+			result += strings.Replace(component.Get(props[j]), ",", ";", -1)
 
 			if j < (len(props) - 1) {
 				result += ","

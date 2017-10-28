@@ -6,10 +6,11 @@ import (
 	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Logger"
+	"kicad-bom-generator/Middleware"
 )
 
 // FormatterFunction defines a formatter callback
-type FormatterFunction func(components []*DataTypes.KiCadComponent) interface{}
+type FormatterFunction func(components DataTypes.KiCadComponentList) interface{}
 
 var log = Logger.New()
 
@@ -55,8 +56,10 @@ func GetFormatter(excel bool, json bool, csv bool, stdout bool) FormatterFunctio
 // formatterMiddleware is used for modifying the component list before it gets
 // sent to the actual formatter
 func formatterMiddleware(fn FormatterFunction, json bool, csv bool, stdout bool) FormatterFunction {
-	return func(components []*DataTypes.KiCadComponent) interface{} {
+	return func(components DataTypes.KiCadComponentList) interface{} {
 		// This closure function can be used for any middleware (looking up on Digikey etc)
+		components = Middleware.SortMiddleware(components)
+
 		output := fn(components)
 
 		// Print to stdout

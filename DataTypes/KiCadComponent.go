@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// KiCadComponentList is a list of KiCad Components
+type KiCadComponentList []*KiCadComponent
+
 // KiCadComponent is a struct that represents a component in KiCad
 type KiCadComponent struct {
 	Name            string

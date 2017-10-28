@@ -19,11 +19,11 @@ var activeComponent *DataTypes.KiCadComponent
 
 // GetComponentsFromFiles is a function that abstracts away calling GetComponents
 // for multiple files
-func GetComponentsFromFiles(files []string) []*DataTypes.KiCadComponent {
+func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
 	mutex := &sync.Mutex{}
 	group := sync.WaitGroup{}
 
-	var components []*DataTypes.KiCadComponent // Complete list of components
+	var components DataTypes.KiCadComponentList // Complete list of components
 
 	for i := range files {
 		file := files[i]
@@ -55,10 +55,10 @@ func GetComponentsFromFiles(files []string) []*DataTypes.KiCadComponent {
 // Follows the spec for schematics in:
 // http://bazaar.launchpad.net/~stambaughw/kicad/doc-read-only/download/head:/1115%4016bec504-3128-0410-b3e8-8e38c2123bca:trunk%252Fkicad-doc%252Fdoc%252Fhelp%252Ffile_formats%252Ffile_formats.pdf/file_formats.pdf
 //
-func GetComponents(schematicFile string) []*DataTypes.KiCadComponent {
+func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 	log.Log("Parsing Schematic File: ", schematicFile)
 
-	var components []*DataTypes.KiCadComponent // List of components found
+	var components DataTypes.KiCadComponentList // List of components found
 
 	for line := range readLine(schematicFile) {
 		// Send each line to the component generator to get components
@@ -144,11 +144,11 @@ func componentGenerator(line string) *DataTypes.KiCadComponent {
 
 // ChangeQuantities will accept a list of components, remove duplicates and update
 // their quantities to reflect the number of components
-func ChangeQuantities(list []*DataTypes.KiCadComponent) []*DataTypes.KiCadComponent {
+func ChangeQuantities(list DataTypes.KiCadComponentList) DataTypes.KiCadComponentList {
 	log.Verbose("Getting Quantities from parsed component list")
 
 	// finalList is the completed list of components
-	var finalList []*DataTypes.KiCadComponent
+	var finalList DataTypes.KiCadComponentList
 
 	// combineWithOthers is a lambda that will look through the list of components
 	// and combine ones that are similar with the part passed to it

@@ -25,7 +25,7 @@ var cellStyle = &xlsx.Style{
 }
 
 // formatExcel formats a component list as an Excel document
-func formatExcel(components []*DataTypes.KiCadComponent) interface{} {
+func formatExcel(components DataTypes.KiCadComponentList) interface{} {
 	file := xlsx.NewFile()
 	sheet, _ := file.AddSheet("Sheet 1")
 

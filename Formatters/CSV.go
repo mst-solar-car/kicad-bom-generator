@@ -4,7 +4,7 @@ package Formatters
 import "kicad-bom-generator/DataTypes"
 
 // formatCSV formats a component list as CSV
-func formatCSV(components []*DataTypes.KiCadComponent) interface{} {
+func formatCSV(components DataTypes.KiCadComponentList) interface{} {
 	props := DataTypes.GetComponentProperties()
 
 	result := ""

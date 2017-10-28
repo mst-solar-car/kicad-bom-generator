@@ -7,7 +7,7 @@ import (
 )
 
 // formatJSON formats a component list as json
-func formatJSON(components []*DataTypes.KiCadComponent) interface{} {
+func formatJSON(components DataTypes.KiCadComponentList) interface{} {
 	result, _ := json.Marshal(components)
 
 	return string(result)

@@ -7,6 +7,8 @@ import (
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Logger"
 	"kicad-bom-generator/Middleware"
+	"os"
+	"path/filepath"
 )
 
 var log = Logger.New()
@@ -42,13 +44,39 @@ func formatWrapper(formatter DataTypes.ComponentListFn) DataTypes.ComponentListF
 	return func(components DataTypes.KiCadComponentList) interface{} {
 		output := formatter(components)
 
-		if args.Json {
-			// TODO: Save to BOM.json
-		} else if args.Csv {
-			// TODO: Save to BOM.csv
+		// Save file that is not excel
+		if !args.Excel {
+			path := filepath.Join(args.Directory, "BOM.")
+
+			if args.Json {
+				path = path + "json"
+			} else if args.Csv {
+				path = path + "csv"
+			}
+
+			writeToFile(output, path)
+			log.Success("BOM saved to: ", path)
+		} else {
+			// Show where the excel was saved11
+			log.Success("BOM saved to: ", output.(string))
 		}
 
 		return output
 	}
 
+}
+
+// writeToFile will write data to a file
+func writeToFile(data interface{}, path string) {
+	file, err := os.Create(path)
+	if err != nil {
+		(Errors.NewFatal(err.Error())).Handle()
+	}
+
+	defer file.Close()
+
+	_, err2 := file.WriteString(data.(string))
+	if err2 != nil {
+		(Errors.NewFatal(err2.Error())).Handle()
+	}
 }

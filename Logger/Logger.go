@@ -42,22 +42,18 @@ func New() *Logger {
 
 // EnableVerbose enables verbose logging on a logger
 func (logger *Logger) EnableVerbose() {
-	mutex.Lock()
 	if logger.Level != Verbose {
 		logger.Level = Verbose
 		logger.Warn("Verbose Logging Enabled")
 	}
-	mutex.Unlock()
 }
 
 // EnableDebug allows for debugging statements to be output
 func (logger *Logger) EnableDebug() {
-	mutex.Lock()
 	if logger.Debugging == false {
 		logger.Debugging = true
 		logger.Warn("Debug mode Enabled")
 	}
-	mutex.Unlock()
 }
 
 // Warn is a member of Logger that outputs a warning message (in yellow)

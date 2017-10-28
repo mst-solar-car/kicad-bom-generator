@@ -85,7 +85,7 @@ func componentGenerator(line string) *DataTypes.KiCadComponent {
 
 	// If the line $EndComp is read then we are at the end of a component
 	if line == "$EndComp" {
-		log.Debug("Parsed Component ", activeComponent.Name)
+		//	log.Debug("Parsed Component ", activeComponent.Name)
 		activeComponent.Quantity = 1 // Initial Quantity
 
 		cpy := activeComponent

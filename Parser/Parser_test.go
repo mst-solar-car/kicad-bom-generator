@@ -27,6 +27,10 @@ func TestParsingASingleFile(t *testing.T) {
 	for i := range actual {
 		found := false
 
+		if actual[i] == nil {
+			t.Errorf("Found a nil pointer in actual")
+		}
+
 		for j := range expected {
 			if actual[i].Equals(expected[j]) {
 				found = true

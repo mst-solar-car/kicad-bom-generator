@@ -14,7 +14,7 @@ Some examples of cool potential middleware:
 Middleware works very similar to a "middleman" (hence, the name). It is called after
 all the components have been parsed, but before the output formatter is called.
 
-Middleware lives inside the [Middleware.go](Middleware/Middleware.go) file.
+Middleware lives inside the [Middleware.go](Middleware.go) file.
 
 **All Middleware Functions must accept, and return a KiCadComponentList**
 

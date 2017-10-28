@@ -2,14 +2,12 @@ package main
 
 import (
 	"flag"
-	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Formatters"
 	"kicad-bom-generator/Logger"
 	"kicad-bom-generator/Parser"
 	"os"
 	"path/filepath"
-	"sync"
 )
 
 var log = Logger.New()
@@ -55,47 +53,18 @@ func main() {
 	// Get the output formatter
 	formatter := Formatters.GetFormatter(*excel, *json, *csv, *stdout)
 
-	log.Log(*directory)
 	// Verify that the directory given is home to a KiCad project (*.pro file)
 	validDir := checkForKiCadProject(*directory)
 	if validDir == false {
-		(Errors.NewFatal("Directory does not contain a KiCad Project")).Handle()
+		(Errors.NewFatal("Directory " + *directory + " does not contain a KiCad Project")).Handle()
 	}
 
 	// Get schematic files from the directory
 	files, err := getSchematicFilesFrom(*directory)
 	err.Handle()
 
-	// Mutex to control access to the components array
-	mutex := &sync.Mutex{}
-	group := sync.WaitGroup{} // group allows the program to wait until all go routines are finished
-
-	// Parse components from each file
-	var components []*DataTypes.KiCadComponent
-	for i := range files {
-		file := files[i]
-
-		group.Add(1)
-
-		// Go Routine to perform these operations asynchronously
-		go func() {
-			foundComponents := Parser.GetComponents(file)
-
-			// Wait for the mutex to unlock, lock it, add to it and then unlock
-			// it for the next go routine that needs it
-			mutex.Lock()
-			components = append(components, foundComponents...)
-			mutex.Unlock()
-
-			group.Done()
-		}()
-	}
-
-	// Wait for all the go routines just created to finish
-	group.Wait()
-
-	// Adjust quantitiy values after parsing all the files
-	components = Parser.ChangeQuantities(components)
+	// Find all the components from all the files
+	components := Parser.GetComponentsFromFiles(files)
 
 	// Finally, we can now format the output
 	formatter(components)

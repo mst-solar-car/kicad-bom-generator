@@ -9,12 +9,46 @@ import (
 	"kicad-bom-generator/Logger"
 	"os"
 	"strings"
+	"sync"
 )
 
 var log = Logger.New()
 
 // activeComponent is a variable representing the current component being parsed
 var activeComponent *DataTypes.KiCadComponent
+
+// GetComponentsFromFiles is a function that abstracts away calling GetComponents
+// for multiple files
+func GetComponentsFromFiles(files []string) []*DataTypes.KiCadComponent {
+	mutex := &sync.Mutex{}
+	group := sync.WaitGroup{}
+
+	var components []*DataTypes.KiCadComponent // Complete list of components
+
+	for i := range files {
+		file := files[i]
+
+		group.Add(1)
+
+		// Go Routine to perform these operations asynchronously
+		go func() {
+			foundComponents := GetComponents(file)
+
+			// Wait for the mutex to unlock, lock it, add to it and then unlock
+			// it for the next go routine that needs it
+			mutex.Lock()
+			components = append(components, foundComponents...)
+			mutex.Unlock()
+
+			group.Done()
+		}()
+	}
+
+	// Wait for all go routines
+	group.Wait()
+
+	return ChangeQuantities(components)
+}
 
 // GetComponents is responsible for parsing a schematic file and returning
 // a list of components needed to generate a BOM

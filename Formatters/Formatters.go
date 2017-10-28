@@ -2,7 +2,6 @@
 package Formatters
 
 import (
-	"fmt"
 	"kicad-bom-generator/Arguments"
 	"kicad-bom-generator/DataTypes"
 	"kicad-bom-generator/Errors"
@@ -48,15 +47,10 @@ func formatterMiddleware(fn FormatterFunction) FormatterFunction {
 
 		output := fn(components)
 
-		// Print to stdout
-		if args.Stdout {
-			fmt.Println(output)
-		} else {
-			if args.Json {
-				// TODO: Save to BOM.json
-			} else if args.Csv {
-				// TODO: Save to BOM.csv
-			}
+		if args.Json {
+			// TODO: Save to BOM.json
+		} else if args.Csv {
+			// TODO: Save to BOM.csv
 		}
 
 		return output

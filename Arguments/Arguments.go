@@ -20,10 +20,9 @@ type Arguments struct {
 	Debug     bool
 
 	// Formatters
-	Stdout bool
-	Excel  bool
-	Json   bool
-	Csv    bool
+	Excel bool
+	Json  bool
+	Csv   bool
 }
 
 var instance *Arguments
@@ -40,7 +39,6 @@ func Retrieve() *Arguments {
 		verbose := flag.Bool("verbose", false, "Enables verbose logging")
 		debug := flag.Bool("debug", false, "Enable debugging mode")
 
-		stdout := flag.Bool("stdout", false, "Output to stdout instead of a file")
 		excel := flag.Bool("excel", true, "Format output as an Excel document")
 		json := flag.Bool("json", false, "Format output as  JSON")
 		csv := flag.Bool("csv", false, "Format output as Comma Separated Values")
@@ -73,7 +71,6 @@ func Retrieve() *Arguments {
 		instance.Directory = *directory
 		instance.Verbose = *verbose
 		instance.Debug = *debug
-		instance.Stdout = *stdout
 		instance.Excel = *excel
 		instance.Json = *json
 		instance.Csv = *csv

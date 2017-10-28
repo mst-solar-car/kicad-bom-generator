@@ -53,7 +53,6 @@ func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
 // a list of components needed to generate a BOM
 // Follows the spec for schematics in:
 // http://bazaar.launchpad.net/~stambaughw/kicad/doc-read-only/download/head:/1115%4016bec504-3128-0410-b3e8-8e38c2123bca:trunk%252Fkicad-doc%252Fdoc%252Fhelp%252Ffile_formats%252Ffile_formats.pdf/file_formats.pdf
-//
 func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 	log.Log("Parsing Schematic File: ", schematicFile)
 

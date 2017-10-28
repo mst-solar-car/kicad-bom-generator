@@ -57,7 +57,7 @@ func GetFormatter(excel bool, json bool, csv bool, stdout bool) FormatterFunctio
 // sent to the actual formatter
 func formatterMiddleware(fn FormatterFunction, json bool, csv bool, stdout bool) FormatterFunction {
 	return func(components DataTypes.KiCadComponentList) interface{} {
-		// This closure function can be used for any middleware (looking up on Digikey etc)
+		// Run the component list through middleware here
 		components = Middleware.SortMiddleware(components)
 
 		output := fn(components)

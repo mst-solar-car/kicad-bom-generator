@@ -80,3 +80,63 @@ func (component KiCadComponent) Get(prop string) string {
 		return ""
 	}
 }
+
+// CombineComponents will combine the same components
+func (list KiCadComponentList) CombineComponents() KiCadComponentList {
+	var finalList KiCadComponentList
+
+	// combineWithOthers is a lambda that will look through the list of components
+	// and combine ones that are similar with the part passed to it
+	combineWithOthers := func(part *KiCadComponent) {
+		for i := range list {
+			c := list[i]
+
+			// Ignore nils
+			if c == nil {
+				continue
+			}
+
+			// Check if they are the same part (but not the same pointer)
+			if part.Equals(c) && part != c {
+				// Combine quantity and reference
+				part.Combine(c)
+				list[i] = nil
+			}
+		}
+	}
+
+	for i := range list {
+		component := list[i]
+
+		// Do not check nil components
+		if component == nil {
+			continue
+		}
+
+		combineWithOthers(component)
+		finalList = append(finalList, component)
+	}
+
+	return finalList
+}
+
+// Len is needed for sorting
+func (list KiCadComponentList) Len() int {
+	return len(list)
+}
+
+// Swap will swap two elements in a list
+func (list KiCadComponentList) Swap(i int, j int) {
+	temp := list[i]
+
+	list[i] = list[j]
+	list[j] = temp
+}
+
+// Less returns true if index i is less than index j
+func (list KiCadComponentList) Less(i int, j int) bool {
+	firstRefI := strings.Split(list[i].Reference, ",")[0]
+	firstRefJ := strings.Split(list[j].Reference, ",")[0]
+
+	return firstRefI < firstRefJ
+}

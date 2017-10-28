@@ -47,7 +47,7 @@ func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
 	// Wait for all go routines
 	group.Wait()
 
-	return ChangeQuantities(components)
+	return components.CombineComponents()
 }
 
 // GetComponents is responsible for parsing a schematic file and returning
@@ -70,7 +70,7 @@ func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 		}
 	}
 
-	return ChangeQuantities(components)
+	return components.CombineComponents()
 }
 
 // componentGenerator is called when reading lines that define a component
@@ -140,51 +140,6 @@ func componentGenerator(line string) *DataTypes.KiCadComponent {
 	}
 
 	return nil
-}
-
-// ChangeQuantities will accept a list of components, remove duplicates and update
-// their quantities to reflect the number of components
-func ChangeQuantities(list DataTypes.KiCadComponentList) DataTypes.KiCadComponentList {
-	log.Verbose("Getting Quantities from parsed component list")
-
-	// finalList is the completed list of components
-	var finalList DataTypes.KiCadComponentList
-
-	// combineWithOthers is a lambda that will look through the list of components
-	// and combine ones that are similar with the part passed to it
-	combineWithOthers := func(part *DataTypes.KiCadComponent) {
-		for i := range list {
-			c := list[i]
-
-			// Ignore nils
-			if c == nil {
-				continue
-			}
-
-			// Check if they are the same part (but not the same pointer)
-			if part.Equals(c) && part != c {
-				// Combine quantity and reference
-				part.Combine(c)
-				log.Debug("Setting to nil")
-				list[i] = nil
-			}
-		}
-	}
-
-	// Loop through the component list
-	for i := range list {
-		component := list[i]
-
-		// Do not check nil components
-		if component == nil {
-			continue
-		}
-
-		combineWithOthers(component)
-		finalList = append(finalList, component)
-	}
-
-	return finalList
 }
 
 // readLine is a generator that will return the contents of the file line by

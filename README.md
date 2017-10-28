@@ -1,5 +1,12 @@
 # KiCad Bill-of-Materials Generator
-This program is designed to parse a KiCad project directory, and generate a Bill-of-Materials based on the schematic files. It can be as simple or as complex as you want it, and has the potential to do some really cool things.
+Let's face it... Generating BOMs from KiCad **SUCKS**. This program is looking to change that.
+
+### It's the ★·.·´¯\`·.·★ BOMdigity ★·.·´¯\`·.·★
+
+What this program allows you to do is generate much more friendly output when you're ready
+to make your Bill-of-Materials. With the option of completely being able to customize the
+internal workings, you can modify, upgrade, and extend this program to your hearts desire.
+
 
 # Formatters
 Currently, this program can generate a BOM in the following formats:
@@ -22,7 +29,7 @@ of different tasks. For example:
 Similar to the formatters, middleware is completely extensible. Read the [Middleware Read Me](Middleware/README.md) for more information.
 
 # Usage
-The program must be build using `go build`.
+The program must be built using `go build`.
 
 ## Arguments
 You can customize how the program behaves based on the arguments you send it:

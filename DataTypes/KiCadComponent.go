@@ -18,6 +18,9 @@ type KiCadComponent struct {
 	Footprint       string
 	Value           string
 	Quantity        int
+	Datasheet       string
+	Supplier        string
+	SupplierPartNo  string
 }
 
 // NewKiCadComponent creates a new KiCadComponent
@@ -34,6 +37,9 @@ func (component KiCadComponent) Copy() *KiCadComponent {
 	newComponent.Footprint = component.Footprint
 	newComponent.Value = component.Value
 	newComponent.Quantity = component.Quantity
+	newComponent.Supplier = component.Supplier
+	newComponent.SupplierPartNo = component.SupplierPartNo
+	newComponent.Datasheet = component.Datasheet
 
 	return newComponent
 }
@@ -42,7 +48,9 @@ func (component KiCadComponent) Copy() *KiCadComponent {
 func (component KiCadComponent) Equals(other *KiCadComponent) bool {
 	return component.Footprint == other.Footprint &&
 		component.FootprintSource == other.FootprintSource &&
-		component.Value == other.Value
+		component.Value == other.Value &&
+		component.Supplier == other.Supplier &&
+		component.SupplierPartNo == other.SupplierPartNo
 }
 
 // Combine will combine quantities, and references of two components that
@@ -59,13 +67,15 @@ func (component *KiCadComponent) Combine(other *KiCadComponent) {
 // If you do not want a value to show up in the output, do not return it here
 // The order returned here is the order that things will go into the output
 func GetComponentProperties() []string {
-	return []string{"Name", "Reference", "Footprint", "Value", "Quantity"}
+	return []string{"Name", "Reference", "Footprint", "Value", "Supplier", "Supplier Part Number", "Quantity"}
 }
 
 // Get is used by formatters, the name parameter will be whatever
 // value is returned by the GetComponentPropertyNames() function
 func (component KiCadComponent) Get(prop string) string {
-	switch strings.ToLower(prop) {
+	prop = strings.Replace(strings.ToLower(prop), " ", "_", -1) // Remove spaces
+
+	switch prop {
 	case "name":
 		return component.Name
 	case "reference":
@@ -76,8 +86,28 @@ func (component KiCadComponent) Get(prop string) string {
 		return component.Value
 	case "quantity":
 		return string(strconv.Itoa(component.Quantity))
+	case "supplier":
+		return component.Supplier
+	case "supplier_part_number":
+		return component.SupplierPartNo
 	default:
 		return ""
+	}
+}
+
+// SetCustomField is responsible for determining if the value field is capable of going
+// into a component, and then updating accordingly. These are fields that
+// are custom, and not defined by the KiCad Spec
+func (component *KiCadComponent) SetCustomField(field string, value string) {
+	field = strings.Replace(strings.ToLower(field), " ", "_", -1) // Remove spaces
+	value = strings.TrimSpace(value)
+
+	if field == "supplier" || field == "supplier_name" {
+		component.Supplier = value
+	} else if field == "supplier_part_number" || field == "supplier_part" {
+		component.SupplierPartNo = value
+	} else if field == "datasheet" {
+		component.Datasheet = value
 	}
 }
 

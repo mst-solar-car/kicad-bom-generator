@@ -8,6 +8,8 @@ import (
 	"kicad-bom-generator/Errors"
 	"kicad-bom-generator/Logger"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -48,8 +50,6 @@ func GetComponentsFromFiles(files []string) DataTypes.KiCadComponentList {
 
 // GetComponents is responsible for parsing a schematic file and returning
 // a list of components needed to generate a BOM
-// Follows the spec for schematics in:
-// http://bazaar.launchpad.net/~stambaughw/kicad/doc-read-only/download/head:/1115%4016bec504-3128-0410-b3e8-8e38c2123bca:trunk%252Fkicad-doc%252Fdoc%252Fhelp%252Ffile_formats%252Ffile_formats.pdf/file_formats.pdf
 func GetComponents(schematicFile string) DataTypes.KiCadComponentList {
 	log.Log("Parsing Schematic File: ", schematicFile)
 
@@ -101,45 +101,84 @@ func componentGenerator() componentGeneratorFn {
 		if activeComponent == nil {
 			return nil
 		}
+
 		// At this point in the function we are parsing a line that specifies
 		// a component, handle it and update activeComponent accordingly
-		words := strings.Split(strings.TrimSpace(line), " ") // Split at spaces
-
-		// Sanity check
-		if len(words) < 3 {
-			log.Warn("Found an invalid line when parsing component: ", line)
-			activeComponent = nil
-
-			return nil
-		}
-
-		switch words[0] {
-		// Lines that start with L contain the component name and reference
-		case "L":
-			activeComponent.Name = stripQuotes(words[1])
-			activeComponent.Reference = stripQuotes(words[2])
-
-		// Lines that start with f are other specs about the component
-		case "F":
-			// F 1... specifies component value
-			if words[1] == "1" {
-				activeComponent.Value = stripQuotes(words[2])
-
-			} else if words[1] == "2" {
-				// F 2... specifies footprints
-				footprint := stripQuotes(words[2]) // Remove quotes
-				footprintWords := strings.Split(footprint, ":")
-
-				if len(footprintWords) >= 2 {
-					activeComponent.FootprintSource = footprintWords[0]
-					activeComponent.Footprint = strings.Join(footprintWords[1:len(footprintWords)], ":")
-				} else {
-					activeComponent.Footprint = footprint
-				}
-			}
-		}
+		parseComponentSpecLine(line, activeComponent)
 
 		return nil
+	}
+}
+
+// parseComponentSpecLine is responsible for actually parsing a single line and
+// pulling out spec information into the component
+// It follows the spec outlined in: http://bazaar.launchpad.net/~stambaughw/kicad/doc-read-only/download/head:/1115%4016bec504-3128-0410-b3e8-8e38c2123bca:trunk%252Fkicad-doc%252Fdoc%252Fhelp%252Ffile_formats%252Ffile_formats.pdf/file_formats.pdf
+func parseComponentSpecLine(line string, component *DataTypes.KiCadComponent) {
+	// Just in case
+	line = strings.TrimSpace(line)
+
+	parts := strings.Split(line, " ") // Split apart at spaces
+
+	// Sanity check
+	if len(parts) < 3 {
+		log.Warn("Found an invalid line when parsing component: ", line)
+		component = nil
+		return
+	}
+
+	// Friendlier names
+	spec := strings.ToUpper(parts[0])
+
+	// L name reference
+	if spec == "L" {
+		component.Name = stripQuotes(parts[1])
+		component.Reference = stripQuotes(parts[2])
+
+		return
+	}
+
+	// F num "text"
+	if spec == "F" {
+		num, err := strconv.Atoi(parts[1])
+		if err != nil {
+			log.Warn("Found an invalid line when parsing component: ", line)
+			component = nil
+			return
+		}
+
+		parts[2] = stripQuotes(parts[2])
+
+		if num == 1 {
+			// F 1 "component_value"
+			component.Value = parts[2]
+
+		} else if num == 2 {
+			// F 2 "component_footprint"
+			footprint := parts[2] // Remove quotes
+			footprintWords := strings.Split(footprint, ":")
+
+			if len(footprintWords) >= 2 {
+				component.FootprintSource = footprintWords[0]
+				component.Footprint = strings.Join(footprintWords[1:len(footprintWords)], ":")
+			} else {
+				component.Footprint = footprint
+			}
+
+		} else if num == 3 {
+			// F 3 "datasheet_url"
+			component.Datasheet = parts[2]
+
+		} else if num > 3 {
+			// F >3 "value" a bunch of junk "name"
+			reg, _ := regexp.Compile("\"([^\"]*)\"") // Regex to match things inside quotes
+
+			matches := reg.FindAllString(line, -1)
+
+			// Verify that two results were returned
+			if len(matches) >= 2 {
+				component.SetCustomField(stripQuotes(matches[1]), stripQuotes(matches[0]))
+			}
+		}
 	}
 }
 

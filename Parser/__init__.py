@@ -7,7 +7,6 @@ from copy import deepcopy
 
 def GetComponentsFromFiles(files):
   """ Searches a list of files for components """
-
   thread_list = [] # List of threads
 
   component_list = [] # List of components
@@ -22,11 +21,8 @@ def GetComponentsFromFiles(files):
   for mythread in thread_list:
     mythread.join()
 
-
-  for i in component_list:
-    print(i['name'])
-
-  return component_list
+  # Return a component list with combined quantities
+  return combineQuantities(component_list)
 
 
 def fileParseThread(file, component_list):
@@ -38,7 +34,6 @@ def fileParseThread(file, component_list):
 
     if component is not None:
       component_list.append(component)
-
 
 
 
@@ -56,6 +51,7 @@ def getComponentParser():
 
     # The line "$EndComp" signifies the end of a component definition
     if line == "$EndComp" and parser.component is not None:
+      parser.component['quantity'] = 1
       cpy = deepcopy(parser.component)
       parser.component = None
       return cpy
@@ -80,7 +76,7 @@ def getComponentParser():
     # L name reference
     if spec == "L":
       parser.component['name'] = parts[1].replace('"', '')
-      parser.component['reference'] = parts[2].replace('"', '')
+      parser.component['reference'] = [parts[2].replace('"', '')]
 
     # F num "value"
     elif spec == "F":
@@ -119,6 +115,47 @@ def getComponentParser():
   parser.component = None
 
   return parser
+
+
+
+def combineQuantities(components):
+  """ Runs through a list of components and combines quantities for similar components """
+  final = []
+
+  def combineWithOthers(component, startIndex):
+    if startIndex >= len(components):
+      return component
+
+    # Loop through components
+    for i in range(startIndex, len(components)):
+      comp = components[i]
+
+      # Combine if they are the same component
+      if componentsAreEqual(comp, component):
+        component['quantity'] = component['quantity'] + comp['quantity']
+        component['reference'] = component['reference'] + comp['reference']
+        components[i] = None
+
+    return component
+
+  # Loop through all components
+  for i in range(0, len(components)):
+    component = components[i]
+
+    # Do not consider components that are None
+    if component is None:
+      continue
+
+    # Combine with all the others
+    component = combineWithOthers(component, i + 1)
+    final.append(component)
+
+  return final
+
+
+def componentsAreEqual(c1, c2):
+  """ Compare two components """
+  return (c1['name'] == c2['name']) and (c1['footprint'] == c2['footprint']) and (c1['value'] == c2['value'])
 
 
 def getLine(file):

@@ -34,4 +34,4 @@ def main():
 
   schematics = getSchematicsFromFolder(args.project_folder)
 
-  Parser.GetComponentsFromFiles(schematics)
+  components = Parser.GetComponentsFromFiles(schematics)

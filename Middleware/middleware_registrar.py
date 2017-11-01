@@ -7,16 +7,16 @@ class MiddlewareRegistrar:
   def __init__(self):
     self._middleware = {} # Start with nothing registered
 
+  def normalize(self, s):
+    return s.lower()
 
   def Register(self, name, fn):
     """ Registers some middleware """
-    print("Registering " + name.lower())
-    self._middleware[name.lower()] = fn
-
+    self._middleware[self.normalize(name)] = fn
 
   def Dispatch(self, name):
     """ Returns a function to wrap around middleware """
-    name = name.lower()
+    name = self.normalize(name)
 
     if name not in self._middleware:
       return None

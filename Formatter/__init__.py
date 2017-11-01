@@ -1,11 +1,13 @@
 __all__ = ['Apply', 'Register']
 
 import sys
+import Config
 import Arguments
 import Middleware
 
 from format_registrar import FormatRegistrar
 
+cfg = Config.Get()
 args = Arguments.Parse()
 registrar = FormatRegistrar()
 
@@ -16,8 +18,12 @@ def Apply(components):
   formatter = registrar.Dispatch(args.formatter)
 
   if formatter is None:
-    print("Error: Unkown Formatter {0}".format(args.formatter))
-    sys.exit(0)
+    # Attempt to load formatter from config.json
+    formatter = registrar.Dispatch(cfg['defaultFormatter'])
+
+    if formatter is None:
+      print("Error: Unkown Formatter {0}".format(args.formatter))
+      sys.exit(0)
 
   # Run through the formatter
   output = formatter(components)

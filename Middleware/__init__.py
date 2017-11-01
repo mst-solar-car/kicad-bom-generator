@@ -19,7 +19,7 @@ def Register(name):
 def Wrapper(fn):
   """ Middleware wrapper for a component list """
   def wrapper(components):
-    for middleware in cfg['defaults']['middleware']:
+    for middleware in cfg['middleware']:
       middlewareFn = registrar.Dispatch(middleware)
 
       if middlewareFn is None:

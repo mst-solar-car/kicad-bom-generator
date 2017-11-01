@@ -1,9 +1,12 @@
 import sys
 import os
 
+import Config
 from Singleton import *
 
 args = sys.argv[1:]
+
+cfg = Config.Get()
 
 @Singleton
 class ArgumentParser:
@@ -11,7 +14,7 @@ class ArgumentParser:
   def __init__(self):
     """ Constructor """
     self.project_folder = os.path.split(os.path.abspath(args[1]))[0]
-    self.formatter = "excel"
+    self.formatter = cfg["defaultFormatter"]
     self.verbose = False
     self.debug = False
 

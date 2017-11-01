@@ -21,7 +21,7 @@ def load_modules(module_folder):
 load_modules("Middleware")
 
 # Load Formatters
-load_modules("Formatters")
+load_modules("Formatter")
 
 # Start doing actual things
 kicad_bom_generator.main()

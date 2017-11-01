@@ -26,12 +26,3 @@ class MiddlewareRegistrar:
       return self._middleware[name](components)
 
     return dispatchWrapper
-
-  def __getitem__(self, name):
-    """ Index Operator """
-    if name in self._middleware:
-      return self._middleware[name]
-    else:
-      return None
-
-

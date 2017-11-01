@@ -3,16 +3,8 @@ import os
 import fnmatch
 
 import Arguments
-import Formatters
+import Formatter
 import Parser
-
-#args = sys.argv[1:]
-
-# Friendlier names for arguments
-#xml_file = args[0]
-#project_folder = args[1]
-
-#os.remove(xml_file) # Remove the XML file since we won't be needing it
 
 
 def getSchematicsFromFolder(dir):
@@ -26,12 +18,17 @@ def getSchematicsFromFolder(dir):
   return files
 
 
-
-
 def main():
   """ Main """
   args = Arguments.Parse()
 
+  formatter = Formatter.GetFormatter()
+
+
+  # Find all the schematic files
   schematics = getSchematicsFromFolder(args.project_folder)
 
+  # Parse components
   components = Parser.GetComponentsFromFiles(schematics)
+
+  formatter(components)

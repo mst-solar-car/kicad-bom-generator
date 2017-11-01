@@ -18,13 +18,8 @@ def Register(name):
 def Wrapper(fn):
   """ Middleware wrapper for a component list """
   def wrapper(components):
-    components = applyMiddleware(components)
+    # TODO: run components through all the middleware
 
     return fn(components)
 
   return wrapper
-
-
-
-
-import test_middleware

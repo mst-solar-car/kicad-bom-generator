@@ -9,7 +9,7 @@
     "manufacturer-part-number": "manufacturer-part"
   },
 
-  "columns": ["name", "supplier-name"],
+  "columns": ["name", "supplier-name", "supplier-part", "quantity"],
 
   "outputLineSeparator": "\n"
 }

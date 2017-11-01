@@ -16,7 +16,7 @@ class MiddlewareRegistrar:
 
   def Dispatch(self, name):
     if name not in self._middleware:
-      print("UH OH")
+      print("UH OH " + name)
       return None
 
     def dispatchWrapper(components):

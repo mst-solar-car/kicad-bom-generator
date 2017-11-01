@@ -28,6 +28,4 @@ def Wrapper(fn):
 
 
 
-@Register('boobs')
-def testMiddleware(components):
-  print("Howdy")
+import test_middleware

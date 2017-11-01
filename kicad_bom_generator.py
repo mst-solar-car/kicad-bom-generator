@@ -26,7 +26,3 @@ def main():
   pass
 
 
-
-
-# Enter the main function
-main()

@@ -1,5 +1,5 @@
 {
-  "defaultFormatter": "csv",
+  "defaultFormatter": "excel",
   "middleware": ["test"],
 
   "metadataAliases": {

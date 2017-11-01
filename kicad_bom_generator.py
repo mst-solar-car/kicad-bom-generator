@@ -17,6 +17,7 @@ def getSchematicsFromFolder(dir):
 
   return files
 
+print(os.getcwd())
 
 def main():
   """ Main """

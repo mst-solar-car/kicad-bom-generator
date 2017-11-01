@@ -7,7 +7,6 @@ import kicad_bom_generator
 # Path that the script is in
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
-
 def load_modules(module_folder):
   """ Loads all custom modules from a module folder """
   found = glob.glob(script_dir + '/' + module_folder + '/*_' + module_folder.lower() + '.py')

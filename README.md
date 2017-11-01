@@ -53,3 +53,37 @@ Now, whenever you are ready to generate your BOM, just select the name that you 
 
 ### Changing Output Format
 If you want to *temporarily* change the output type, in the "`Command Line`" field when you have the plugin selected add `"formatter-name"` to the end (separated by a space from the thing before it [including quotes]). And then click "`Generate`"
+
+# Configuration
+This program is configurable using the `config.json` file.
+
+This file controls default values, metadata information, middleware, and formatter output.
+
+This table shows a valid attribute, type, and value, of the `config.json` file:
+
+Name | Type | Description
+-----|------|-------------
+`defaultFormatter` | string | The formatter to use if no formatter is speficied in the argumnets
+`middleware` | []string | This is the list of middleware to run the component list through, *order matters*. This is referred to as the *middleware pipeline*.
+`metadataAliases` | object | This object will allow for common variants of metadata to point to another metadata value. This should be a dictionary, e.g.: `{ "alias": "real-name" }`
+`columns` | []string | the metadata names for the columns to show, *order matters*.
+`outputLineSeparator` | string | If you are outputing in CSV format then this is what will be used to separate rows. This can be anything you want, a good default value is: "`\n`"
+
+Here is a complete example of `config.json`:
+```json
+{
+  "defaultFormatter": "excel",
+  "middleware": ["sort"],
+
+  "metadataAliases": {
+    "supplier": "supplier-name",
+    "supplier-part-number": "supplier-part",
+    "manufacturer": "manufacturer-name",
+    "manufacturer-part-number": "manufacturer-part"
+  },
+
+  "columns": ["name", "supplier-name", "supplier-part", "quantity", "reference"],
+
+  "outputLineSeparator": "\n"
+}
+```

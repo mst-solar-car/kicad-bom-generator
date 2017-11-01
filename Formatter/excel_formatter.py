@@ -32,9 +32,8 @@ def excel_formatter(components):
 
     ws.append(row)
 
-
   # Save the excel file
   save_path = "{0}BOM.xlsx".format(args.project_folder)
   wb.save(save_path)
 
-  return save_path
+  return "BOM saved to \"{0}\"".format(save_path)

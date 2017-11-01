@@ -28,6 +28,8 @@ def Apply(components):
   # Run through the formatter
   output = formatter(components)
 
+  print(output)
+
   return output
 
 

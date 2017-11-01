@@ -1,6 +1,15 @@
 {
-  "defaults": {
-    "formatter": "test",
-    "middleware": ["test"]
-  }
+  "defaultFormatter": "csv",
+  "middleware": ["test"],
+
+  "metadataAliases": {
+    "supplier": "supplier-name",
+    "supplier-part-number": "supplier-part",
+    "manufacturer": "manufacturer-name",
+    "manufacturer-part-number": "manufacturer-part"
+  },
+
+  "columns": ["name", "supplier-name"],
+
+  "outputLineSeparator": "\n"
 }

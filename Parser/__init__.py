@@ -4,6 +4,9 @@ import re
 from threading import Thread
 from copy import deepcopy
 
+import Config
+
+cfg = Config.Get()
 
 def GetComponentsFromFiles(files):
   """ Searches a list of files for components """
@@ -102,6 +105,10 @@ def getComponentParser():
         if matches:
           name = matches.group(2).lower().replace(' ', '-')
           value = matches.group(1)
+
+          # Alias lookup
+          if name in cfg['metadataAliases']:
+            name = cfg['metadataAliases'][name]
 
           parser.component[name] = value
 

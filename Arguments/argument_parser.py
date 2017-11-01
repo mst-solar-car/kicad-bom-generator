@@ -35,4 +35,8 @@ class ArgumentParser:
       elif args[4].lower() == "debug":
         self.debug = True
 
+    # Enforce trailing slash on project_folder
+    lastChar = self.project_folder[len(self.project_folder) - 1:]
+    if lastChar != "/" and lastChar != "\\":
+      self.project_folder = self.project_folder + "/"
 

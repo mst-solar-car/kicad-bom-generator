@@ -26,7 +26,7 @@ def excel_formatter(components):
 
     for column in columns:
       try:
-        row.append(component[column])
+        row.append(str(component[column]))
       except:
         row.append("[error]")
 

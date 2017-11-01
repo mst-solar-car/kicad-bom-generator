@@ -1,6 +1,6 @@
 {
   "defaultFormatter": "excel",
-  "middleware": ["test"],
+  "middleware": ["sort"],
 
   "metadataAliases": {
     "supplier": "supplier-name",
@@ -9,7 +9,7 @@
     "manufacturer-part-number": "manufacturer-part"
   },
 
-  "columns": ["name", "supplier-name", "supplier-part", "quantity"],
+  "columns": ["name", "supplier-name", "supplier-part", "quantity", "reference"],
 
   "outputLineSeparator": "\n"
 }

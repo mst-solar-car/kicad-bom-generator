@@ -79,7 +79,7 @@ def getComponentParser():
     # L name reference
     if spec == "L":
       parser.component['name'] = parts[1].replace('"', '')
-      parser.component['reference'] = [parts[2].replace('"', '')]
+      parser.component['reference'] = parts[2].replace('"', '')
 
     # F num "value"
     elif spec == "F":
@@ -136,11 +136,12 @@ def combineQuantities(components):
     # Loop through components
     for i in range(startIndex, len(components)):
       comp = components[i]
-
+      if comp is None:
+        continue
       # Combine if they are the same component
       if componentsAreEqual(comp, component):
         component['quantity'] = component['quantity'] + comp['quantity']
-        component['reference'] = component['reference'] + comp['reference']
+        component['reference'] = component['reference'] + ", " + comp['reference']
         components[i] = None
 
     return component

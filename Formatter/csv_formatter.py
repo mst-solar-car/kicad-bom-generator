@@ -11,11 +11,11 @@ def csv_formatter(components):
   columns = cfg['columns']
   nl = cfg['outputLineSeparator']
 
-  result = columns[0]
+  result = columns[0].replace('-', ' ').title()
 
   # Add column headers
   for column in columns[1:]:
-    result = result + "," + column.replace('-', ' ')
+    result = result + "," + column.replace('-', ' ').title()
 
   # Add components
   for component in components:

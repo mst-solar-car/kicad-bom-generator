@@ -1,0 +1,6 @@
+{
+  "defaults": {
+    "formatter": "test",
+    "middleware": ["test"]
+  }
+}

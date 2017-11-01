@@ -1,4 +1,4 @@
-__all__ = ['GetFormatter', 'Register']
+__all__ = ['Apply', 'Register']
 
 import sys
 import Arguments
@@ -9,17 +9,20 @@ from format_registrar import FormatRegistrar
 args = Arguments.Parse()
 registrar = FormatRegistrar()
 
-def GetFormatter():
-  """ Returns a function that can be used to format a list of components """
-  formatter = args.formatter
+def Apply(components):
+  """ Apply the appropriate formatter to the list of components """
+  fn = registrar.Dispatch(args.formatter)
 
-  fn = registrar.Dispatch(formatter)
+  if fn is None:
 
   if fn is None:
     print("ERROR")
     sys.exit(0)
 
-  return formatWrap(fn)
+  # Wrap the formatter in middleware and stuff
+  formatter = formatWrap(fn)
+
+  return formatter(components)
 
 
 def Register(name):

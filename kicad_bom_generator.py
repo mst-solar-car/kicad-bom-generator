@@ -5,7 +5,7 @@ import fnmatch
 import Arguments
 import Formatter
 import Parser
-
+import Config
 
 def getSchematicsFromFolder(dir):
   """ Finds all the .sch files in directory """
@@ -21,9 +21,9 @@ def getSchematicsFromFolder(dir):
 def main():
   """ Main """
   args = Arguments.Parse()
+  cfg = Config.Get()
 
   formatter = Formatter.GetFormatter()
-
 
   # Find all the schematic files
   schematics = getSchematicsFromFolder(args.project_folder)
@@ -31,4 +31,4 @@ def main():
   # Parse components
   components = Parser.GetComponentsFromFiles(schematics)
 
-  formatter(components)
+  Formatter.Apply(components)

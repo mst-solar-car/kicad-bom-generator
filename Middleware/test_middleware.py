@@ -2,9 +2,6 @@ import Middleware
 
 
 
-@Middleware.Register("Meow")
+@Middleware.Register("test")
 def test_middleware(components):
-  print("meow")
-
-
-print("test middleware")
+  print("In Test Middleware")

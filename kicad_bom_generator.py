@@ -23,8 +23,6 @@ def main():
   args = Arguments.Parse()
   cfg = Config.Get()
 
-  formatter = Formatter.GetFormatter()
-
   # Find all the schematic files
   schematics = getSchematicsFromFolder(args.project_folder)
 

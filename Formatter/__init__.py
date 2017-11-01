@@ -9,20 +9,20 @@ from format_registrar import FormatRegistrar
 args = Arguments.Parse()
 registrar = FormatRegistrar()
 
+
+@Middleware.Wrapper
 def Apply(components):
-  """ Apply the appropriate formatter to the list of components """
-  fn = registrar.Dispatch(args.formatter)
+  """ Apply the appropriate formatter to the list of components (after middleware) """
+  formatter = registrar.Dispatch(args.formatter)
 
-  if fn is None:
-
-  if fn is None:
-    print("ERROR")
+  if formatter is None:
+    print("Error: Unkown Formatter {0}".format(args.formatter))
     sys.exit(0)
 
-  # Wrap the formatter in middleware and stuff
-  formatter = formatWrap(fn)
+  # Run through the formatter
+  output = formatter(components)
 
-  return formatter(components)
+  return output
 
 
 def Register(name):
@@ -30,16 +30,5 @@ def Register(name):
   def wrapper(formatterFn):
     registrar.Register(name, formatterFn)
     return formatterFn
-
-  return wrapper
-
-
-def formatWrap(fn):
-  """ Wraps a function for formatting -- also applies middleware """
-  @Middleware.Wrapper
-  def wrapper(components):
-    output = fn(components)
-    # TODO: Save output
-    return output
 
   return wrapper

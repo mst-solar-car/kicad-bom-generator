@@ -2,10 +2,7 @@ import sys
 import glob, os
 
 import Arguments
-import Formatter
-
-args2 = Arguments.Parse()
-
+import Formatters
 
 #args = sys.argv[1:]
 
@@ -24,5 +21,6 @@ def getSchematicsFromFolder(dir):
 def main():
   """ Main """
   pass
+
 
 

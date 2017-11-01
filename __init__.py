@@ -1,9 +1,10 @@
 import os
 import glob
 import importlib
-#import kicad_bom_generator
 
+import kicad_bom_generator
 
+# Path that the script is in
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -22,6 +23,5 @@ load_modules("Middleware")
 # Load Formatters
 load_modules("Formatters")
 
-
-
-
+# Start doing actual things
+kicad_bom_generator.main()

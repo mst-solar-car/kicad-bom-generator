@@ -10,7 +10,6 @@ def Register(name):
   """ Decorator for Registering Middleware """
   def wrapper(middlewareFn):
     registrar.Register(name, middlewareFn)
-
     return registrar.Dispatch(name)
 
   return wrapper

@@ -15,8 +15,10 @@ class MiddlewareRegistrar:
 
 
   def Dispatch(self, name):
+    """ Returns a function to wrap around middleware """
+    name = name.lower()
+
     if name not in self._middleware:
-      print("UH OH " + name)
       return None
 
     def dispatchWrapper(components):

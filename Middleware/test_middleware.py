@@ -1,10 +1,10 @@
-#import Middleware
+import Middleware
 
 
 
-#@Middleware.Register("Meow")
-#def test(components):
-  #print("meow")
+@Middleware.Register("Meow")
+def test_middleware(components):
+  print("meow")
 
 
 print("test middleware")

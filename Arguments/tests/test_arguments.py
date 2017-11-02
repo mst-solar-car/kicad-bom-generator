@@ -8,7 +8,7 @@ from Arguments.argument_parser import ArgumentParser
 
 cfg = Config.Get()
 
-def test_invalid_number_of_arguments():
+def test_setting_default_arguments():
   """ Tests Parsing Arguments with an invalid number of arguments """
   # Arrange
   expected_project_folder = os.path.split(os.path.abspath(os.getcwd()))[0] + "/"
@@ -20,10 +20,11 @@ def test_invalid_number_of_arguments():
   # Assert
   assert testArgs.project_folder == expected_project_folder
   assert testArgs.formatter == expected_formatter
+  assert testArgs.verbose == False
+  assert testArgs.debug == False
 
   # Cleanup
   ArgumentParser.Reset()
-
 
 
 def test_appending_trailing_foward_slash():
@@ -37,6 +38,23 @@ def test_appending_trailing_foward_slash():
 
   # Assert
   assert testArgs.project_folder == expected_project_folder
+
+  # Cleanup
+  ArgumentParser.Reset()
+
+def test_formatter_arg():
+  """ Tests to confirm that the Argument Parser sets a formatter """
+  # Arrange
+  expected_project_folder = "C:\\NotReal\TestAgain/"
+  excepted_formatter = "csv"
+  args = ["C:\\NotReal\TestAgain\File.xml", "C:\\NotReal\TestAgain\Project", "csv"]
+
+  # Act
+  testArgs = ArgumentParser(args)
+
+  # Assert
+  assert testArgs.project_folder == expected_project_folder
+  assert testArgs.formatter == excepted_formatter
 
   # Cleanup
   ArgumentParser.Reset()

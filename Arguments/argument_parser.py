@@ -14,8 +14,6 @@ class ArgumentParser:
   def __init__(self, *args, **kwargs):
     """ Constructor """
     params = args[0]
-    for p in params:
-      print("HI", p)
 
     if len(params) < 2:
       params.append("") # Path to XML file that doesn't exist
@@ -32,7 +30,7 @@ class ArgumentParser:
       pass
 
     # Add formatter if there is one
-    if len(args) > 2:
+    if len(params) > 2:
       self.formatter = params[2].lower()
       # TODO: Verify formatter
 

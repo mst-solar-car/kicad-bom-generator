@@ -15,7 +15,7 @@ def GetComponentsFromFiles(files):
   component_list = [] # List of components
 
   # Start a new thread for every file in the list
-  for file in files[:1]:
+  for file in files:
     t = Thread(target=fileParseThread, args=(file, component_list))
     t.start()
     thread_list.append(t)

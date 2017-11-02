@@ -87,3 +87,9 @@ Here is a complete example of `config.json`:
   "outputLineSeparator": "\n"
 }
 ```
+
+# Switch to Python
+This project was originally implemented in Go. However, once complete it was switched to Python for a couple of reasons.
+
+- Cross-Platform compatability without needing to install a Go compiler and building the project
+- Ability to edit (add new Middleware and new Formatters) without recompilling the source code

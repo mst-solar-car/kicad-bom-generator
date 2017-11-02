@@ -1,7 +1,7 @@
 __all__ = ['Wrapper', 'Register']
 
 import Config
-from middleware_registrar import MiddlewareRegistrar
+from .middleware_registrar import MiddlewareRegistrar
 
 cfg = Config.Get()
 registrar = MiddlewareRegistrar()

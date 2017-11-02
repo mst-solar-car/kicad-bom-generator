@@ -168,8 +168,6 @@ def test_multiple_files():
     }
   ]
 
-  files = [multiple_components, multiple_components_duplicates]
-
   # Act
   components_found = Parser.GetComponentsFromFiles([multiple_components, multiple_components_duplicates])
 

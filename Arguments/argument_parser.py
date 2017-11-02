@@ -36,16 +36,14 @@ class ArgumentParser:
 
     # Add verbose or debug
     if len(params) > 3:
-      if params[3].lower() == "verbose":
-        self.verbose = True
-      elif params[3].lower() == "debug":
-        self.debug = True
+      params[3] = params[3].lower()
+      self.verbose = (params[3] == "verbose")
+      self.debug = (params[3] == "debug")
 
     if len(params) > 4:
-      if params[4].lower() == "verbose":
-        self.verbose = True
-      elif params[4].lower() == "debug":
-        self.debug = True
+      params[4] = params[4].lower()
+      self.verbose = (params[4] == "verbose" or self.verbose)
+      self.debug = (params[4] == "debug" or self.debug)
 
     # Enforce trailing slash on project_folder
     lastChar = self.project_folder[len(self.project_folder) - 1:]

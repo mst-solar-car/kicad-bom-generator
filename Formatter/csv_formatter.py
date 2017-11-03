@@ -25,6 +25,6 @@ def csv_formatter(components):
       try:
         result = result + "," + str(component[columns[i]])
       except:
-        result = result + ",[error]"
+        result = result + "," + str(cfg['emptyValue'])
 
   return result

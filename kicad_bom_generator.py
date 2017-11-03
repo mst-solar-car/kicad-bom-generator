@@ -8,6 +8,10 @@ import Arguments
 import Formatter
 import Parser
 import Config
+import Logger
+
+# Parse command line arguments and get configuration
+args = Arguments.Parse()
 
 # Path that the script is in
 script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -18,7 +22,10 @@ def load_modules(module_folder):
 
   for file in found:
     name = os.path.basename(file).replace('.py', '') # Remove file extension
-    importlib.import_module(module_folder + '.' + name)
+    module = "{0}.{1}".format(module_folder, name)
+
+    Logger.Debug("Importing: {0}".format(module))
+    importlib.import_module(module)
 
 def getSchematicsFromFolder(dir):
   """ Finds all the .sch files in directory """
@@ -33,9 +40,6 @@ def getSchematicsFromFolder(dir):
 
 def main():
   """ Main """
-  args = Arguments.Parse()
-  cfg = Config.Get()
-
   # Find all the schematic files
   schematics = getSchematicsFromFolder(args.project_folder)
 

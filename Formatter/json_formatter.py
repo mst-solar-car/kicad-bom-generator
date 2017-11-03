@@ -20,7 +20,7 @@ def json_formatter(components):
       try:
         newComp[column] = component[column]
       except:
-        newComp[column] = "[unkown]"
+        newComp[column] = cfg['emptyValue']
 
     newList.append(newComp)
 

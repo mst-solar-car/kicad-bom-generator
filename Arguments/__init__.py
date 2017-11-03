@@ -3,6 +3,6 @@ __all__ = ['Parse']
 import sys
 from .argument_parser import ArgumentParser
 
-def Parse(args = sys.argv[1:]):
+def Parse():
   """ Little function to help with syntax """
-  return ArgumentParser(args)
+  return ArgumentParser()

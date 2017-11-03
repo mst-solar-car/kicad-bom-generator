@@ -18,7 +18,7 @@ of different tasks. For example:
 - Referencing a database and injecting other data (serial numbers, distributor part numbers, etc)
 - Verifying components against some other source
 
-Similar to the formatters, middleware is completely extensible. Read the [Middleware Read Me](Middleware/README.md) for more information.
+Read the [Middleware Read Me](Middleware/README.md) for more information.
 
 # Formatters
 Formatters let you output your BOM in different formats.
@@ -28,8 +28,7 @@ Currently, this program can generate a BOM in the following formats:
 - Comma Separated Value (CSV)
 - JSON
 
-However, it is completely extensible and new formatters can easily be added to
-expand the potential output of this program. Read the [Formatters Read Me](Formatter/README.md) for more information.
+Read the [Formatters Read Me](Formatter/README.md) for more information.
 
 
 
@@ -46,13 +45,27 @@ This program can be ran directly from inside KiCad!
 3. Click `Add Plugin` on the right hand side
 4. Browse to this folder and select the `kicad_bom_generator.py` file
 5. Click `Open`
-6. Type in a meaningul name
+6. Type in a meaningful name
 
 Now, whenever you are ready to generate your BOM, just select the name that you typed in where it is listed under "`Plugins`" and then click "`Generate`"
 
 
-### Changing Output Format
+## Changing Output Format
 If you want to *temporarily* change the output type, in the "`Command Line`" field when you have the plugin selected add `"formatter-name"` to the end (separated by a space from the thing before it [including quotes]). And then click "`Generate`"
+
+### Example
+Here are some examples of what you can put in the "`Command line`" field in KiCad:
+
+`python "[path]\kicad_bom_generator.py" "%I" "%O" "excel"` would output in Excel format
+
+`python "[path]\kicad_bom_generator.py" "%I" "%O" "csv"` would output in CSV
+
+
+## Command Line Help
+Since `kicad_bom_generator.py` is runnable directly from the command line, you can run the following command to see available arguments:
+
+`kicad_bom_generator.py -h`
+
 
 # Configuration
 This program is configurable using the `config.json` file.

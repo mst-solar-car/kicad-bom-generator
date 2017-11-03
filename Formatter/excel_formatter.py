@@ -28,12 +28,12 @@ def excel_formatter(components):
       try:
         row.append(str(component[column]))
       except:
-        row.append("[error]")
+        row.append(str(cfg['emptyValue']))
 
     ws.append(row)
 
   # Save the excel file
-  save_path = "{0}BOM.xlsx".format(args.project_folder)
+  save_path = "{0}.xlsx".format(args.output_file)
   wb.save(save_path)
 
   return "BOM saved to \"{0}\"".format(save_path)

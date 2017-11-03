@@ -1,6 +1,9 @@
 {
-  "defaultFormatter": "excel",
+  "formatter": "excel",
   "middleware": ["sort"],
+
+  "debug": false,
+  "verbose": false,
 
   "metadataAliases": {
     "supplier": "supplier-name",

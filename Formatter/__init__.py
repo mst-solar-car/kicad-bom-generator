@@ -5,7 +5,7 @@ import Config
 import Arguments
 import Middleware
 
-from format_registrar import FormatRegistrar
+from .format_registrar import FormatRegistrar
 
 cfg = Config.Get()
 args = Arguments.Parse()

@@ -41,9 +41,6 @@ def fileParseThread(file, component_list):
       component_list.Add(component)
 
 
-
-
-
 def getLine(file):
   """ Generator for getting each line of a file one at a time """
   f = open(file)

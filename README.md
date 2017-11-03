@@ -44,7 +44,7 @@ This program can be ran directly from inside KiCad!
 1. Open Eeschema
 2. Click on the `Tools > Generate Bill of Materials`
 3. Click `Add Plugin` on the right hand side
-4. Browse to this folder and select the `__init__.py` file
+4. Browse to this folder and select the `kicad_bom_generator.py` file
 5. Click `Open`
 6. Type in a meaningul name
 
@@ -86,6 +86,14 @@ Here is a complete example of `config.json`:
 
   "outputLineSeparator": "\n"
 }
+```
+
+# Testing
+To perform all the tests run:
+
+```py
+pip install lxml
+pytest
 ```
 
 # Switch to Python

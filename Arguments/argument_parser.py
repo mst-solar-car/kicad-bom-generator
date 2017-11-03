@@ -19,7 +19,7 @@ class ArgumentParser:
     self._parser = argparse.ArgumentParser(description="KiCad Bill-Of-Materials Generator")
     self._parser.add_argument("netlist", help='XML Netlist file that KiCad automatically generates. Use "%%I" in KiCad. If specified the file will be removed. Leave as a space to ignore')
     self._parser.add_argument("output", help='Name of the BOM File to generate (no extension). Use "%%O" in KiCad. This should be in the same folder as the .pro file')
-    self._parser.add_argument("formatter", default=cfg['formatter'], help="Specify the formatter to use")
+    self._parser.add_argument("formatter", default=cfg['formatter'], help="Specify the formatter to use", nargs='?')
     self._parser.add_argument("-v", "--verbose", default=cfg.Get('verbose', False), help="Enable verbose output", action='count')
     self._parser.add_argument("-d", "--debug", default=cfg.Get('debug', False), help="Enable debugging output", action='count')
     self.args = self._parser.parse_args()

@@ -9,7 +9,10 @@ class FormatRegistrar:
     self._formatters = {} # Start with nothing registered
 
   def normalize(self, s):
-    return s.lower()
+    try:
+      return s.lower()
+    except:
+      return s # ?
 
   def Register(self, name, fn):
     """ Register a function that formats """

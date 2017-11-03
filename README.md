@@ -60,6 +60,8 @@ Here are some examples of what you can put in the "`Command line`" field in KiCa
 
 `python "[path]\kicad_bom_generator.py" "%I" "%O" "csv"` would output in CSV
 
+`python "[path]\kciad_bom_generator.py" "%I" "%O"` would output in the formatter specified in `config.json` (see below) or error (if nothing is set in the config)
+
 
 ## Command Line Help
 Since `kicad_bom_generator.py` is runnable directly from the command line, you can run the following command to see available arguments:
@@ -76,7 +78,7 @@ This table shows a valid attribute, type, and value, of the `config.json` file:
 
 Name | Type | Description
 -----|------|-------------
-`defaultFormatter` | string | The formatter to use if no formatter is speficied in the argumnets
+`formatter` | string | The formatter to use if no formatter is speficied in the argumnets
 `middleware` | []string | This is the list of middleware to run the component list through, *order matters*. This is referred to as the *middleware pipeline*.
 `metadataAliases` | object | This object will allow for common variants of metadata to point to another metadata value. This should be a dictionary, e.g.: `{ "alias": "real-name" }`
 `columns` | []string | the metadata names for the columns to show, *order matters*.

@@ -32,9 +32,9 @@ def excel_formatter(components):
 
     for column in columns:
       try:
-        row.append(str(component[column]))
+        row.append(component[column])
       except:
-        row.append(str(cfg['emptyValue']))
+        row.append(cfg['emptyValue'])
 
     ws.append(row)
 

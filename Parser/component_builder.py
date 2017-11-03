@@ -8,6 +8,8 @@ from copy import deepcopy
 import re
 import Config
 
+from Component import KiCadComponent
+
 cfg = Config.Get()
 
 
@@ -21,15 +23,13 @@ class ComponentBuilder:
     """ Method used to parse a single line of a .sch file """
     # The Line "$Comp" signifies the start of a component definition
     if line == "$Comp":
-      self.component = {}
+      self.component = KiCadComponent()
       return None
 
     # The line "$EndComp" signifies the end of a component definition
     if line == "$EndComp" and self.component is not None:
-      self.component["quantity"] = 1
-
       # Return a copy of the built component
-      cpy = deepcopy(self.component)
+      cpy = self.component.Copy()
       self.component = None
 
       return cpy

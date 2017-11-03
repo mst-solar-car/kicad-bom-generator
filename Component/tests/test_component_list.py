@@ -44,7 +44,7 @@ def test_add_order():
 
 
 def test_delete():
-  """ Tests removing an item """
+  """ Tests deleting an item """
   # Arrange
   component1 = KiCadComponent({
     "name": "TestComponent1"

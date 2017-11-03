@@ -28,4 +28,5 @@ def main():
   # Parse components
   components = Parser.GetComponentsFromFiles(schematics)
 
+  # Run through middleware and formatter
   Formatter.Apply(components)

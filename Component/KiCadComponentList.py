@@ -9,7 +9,6 @@ class KiCadComponentList:
     self.components = {}
     self.order = [] # List of hashes representing the order of the components
     self._lock = threading.RLock()
-    self.index = 0
 
     # Allow initialization
     if type(data) is list:
@@ -102,8 +101,7 @@ class KiCadComponentList:
       del self.components[hash] # Remove from dictionary
       del self.order[index]
     except:
-      pass
-
+      raise
     self._lock.release() # release before leaving method
 
   def __len__(self):
@@ -112,18 +110,15 @@ class KiCadComponentList:
 
   def __iter__(self):
     """ Make this class iterable """
-    self.index = 0
-    return self
+    self._lock.acquire()
+    data = [ self.components[c] for c in self.order ]
+    self._lock.release()
+    return iter(data)
 
-  def __next__(self):
-    """ Python 3 iteration """
-    self.index = self.index + 1
-    if self.index >= len(self.order):
-      raise StopIteration
-
-    return self.components[self.order[self.index]]
-
-  def next(self):
-    """ Python <3 iteration """
-    return self.__next__()
+  def __str__(self):
+    """ Convert to a string """
+    self._lock.acquire()
+    data = [ str(self.components[c]) for c in self.order ]
+    self._lock.release()
+    return str(data)
 

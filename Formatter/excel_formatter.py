@@ -5,6 +5,7 @@ import Formatter
 import Config
 
 from openpyxl import Workbook
+from openpyxl.styles import Alignment
 
 args = Arguments.Parse()
 cfg = Config.Get()
@@ -19,6 +20,11 @@ def excel_formatter(components):
 
   # Add header row
   ws.append([c.replace('-', ' ').title() for c in columns])
+
+  # Format the header cells
+  for cell in ws._cells_by_col(1, 1, len(columns), 1):
+    cell[0].style= 'Headline 1'
+    cell[0].alignment = Alignment(horizontal='center')
 
   # Add a row for all the components
   for component in components:

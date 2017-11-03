@@ -1,12 +1,16 @@
 from __future__ import absolute_import
 
 import Middleware
+from Component import *
 from Middleware.middleware_registrar import MiddlewareRegistrar
 
 @Middleware.Register("middleware-registration-unit-test")
 def test_middleware(components):
   """ Test middleware function that returns a simple number """
-  return 5
+  for component in components:
+    component['quantity'] = component['quantity'] + 1
+
+  return components
 
 
 def test_middleware():
@@ -14,10 +18,19 @@ def test_middleware():
   # Arrange
   registrar = MiddlewareRegistrar()
   middleware = registrar.Dispatch("middleware-registration-unit-test") # Get the function that the middleware is registered as
-  expected = 5
+  expected = KiCadComponentList({
+    "name": "TestComponent",
+    "quantity": 11
+  })
 
   # Act
-  actual = middleware(6) # Run the number 6 through our middleware
+  actual = middleware(KiCadComponentList({
+    "name": "TestComponent",
+    "quantity": 10
+  }))
 
   # Assert
-  assert actual == expected
+  assert len(actual) == len(expected)
+
+  for i in range(0, len(actual)):
+    assert actual[i] == expected[i]

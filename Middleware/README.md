@@ -17,7 +17,7 @@ all the components have been parsed, but before the output formatter is called.
 # Creating Middleware
 Creating Middleware is nearly the exact process as creating a Formatter.
 
-**All Middleware Functions must accept, and return a list of components**
+**All Middleware Functions must accept, and return a KiCadComponentList**
 
 ## Step 1
 The first step is to create a file in the `Middleware` folder (the same folder as this README)

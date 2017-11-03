@@ -3,7 +3,7 @@ from copy import deepcopy
 from .KiCadComponent import KiCadComponent
 
 
-class KiCadComponentList:
+class KiCadComponentList(object):
   """ Class to represent a list of KiCadComponents """
   def __init__(self, data=None):
     self.components = {}
@@ -17,6 +17,16 @@ class KiCadComponentList:
           hash = component.Hash()
           self.order.append(hash)
           self.components[hash] = component.Copy()
+
+  def Copy(self):
+    """ Creates a copy of the list """
+    self._lock.acquire()
+    cpy = KiCadComponentList()
+    cpy.components = deepcopy(self.components)
+    cpy.order = deepcopy(self.order)
+    self._lock.release()
+
+    return cpy
 
   def Add(self, new_component):
     """ Add a component from the list """

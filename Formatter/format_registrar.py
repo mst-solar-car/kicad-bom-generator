@@ -1,5 +1,5 @@
 from Singleton import *
-import Middleware
+import Logger
 
 
 @Singleton
@@ -13,6 +13,7 @@ class FormatRegistrar:
 
   def Register(self, name, fn):
     """ Register a function that formats """
+    Logger.Debug("Registering Formatter:", self.normalize(name))
     self._formatters[self.normalize(name)] = fn
 
   def Dispatch(self, name):
@@ -24,7 +25,12 @@ class FormatRegistrar:
 
     def dispatchWrapper(components):
       """ Wrapper function to call a formatter """
-      return self._formatters[name](components)
+      Logger.Debug("Running", name, "Formatter")
+
+      try:
+        return self._formatters[name](components)
+      except Exception as e:
+        Logger.Error("Exception", e, "in", name, "Formatter")
 
     return dispatchWrapper
 

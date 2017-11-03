@@ -81,6 +81,7 @@ Name | Type | Description
 `metadataAliases` | object | This object will allow for common variants of metadata to point to another metadata value. This should be a dictionary, e.g.: `{ "alias": "real-name" }`
 `columns` | []string | the metadata names for the columns to show, *order matters*.
 `outputLineSeparator` | string | If you are outputing in CSV format then this is what will be used to separate rows. This can be anything you want, a good default value is: "`\n`"
+`emptyValue` | string | Value to put in the output column if a component doesn't have anything for that column
 
 Here is a complete example of `config.json`:
 ```json

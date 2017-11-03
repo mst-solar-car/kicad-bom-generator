@@ -2,7 +2,10 @@ import json
 
 import Formatter
 import Config
+import Arguments
+import Logger
 
+args = Arguments.Parse()
 cfg = Config.Get()
 
 
@@ -24,4 +27,17 @@ def json_formatter(components):
 
     newList.append(newComp)
 
-  return json.dumps(newList)
+  result = json.dumps(newList)
+
+   # Save the json file
+  save_path = "{0}.json".format(args.output_file)
+  try:
+    with open(save_path, "w") as file:
+      file.write(result)
+
+    Logger.Debug("Output saved to", save_path)
+
+    return "BOM saved to \"{0}\"".format(save_path)
+
+  except:
+    Logger.Error("Could not save output to", save_path)

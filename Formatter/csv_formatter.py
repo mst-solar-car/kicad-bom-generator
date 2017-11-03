@@ -1,7 +1,9 @@
 import Formatter
 import Config
+import Logger
+import Arguments
 
-
+args = Arguments.Parse()
 cfg = Config.Get()
 
 
@@ -27,4 +29,14 @@ def csv_formatter(components):
       except:
         result = result + "," + str(cfg['emptyValue'])
 
-  return result
+  # Save the csv file
+  save_path = "{0}.csv".format(args.output_file)
+  try:
+    with open(save_path, "w") as file:
+      file.write(result)
+
+    Logger.Debug("Output saved to", save_path)
+    return "BOM saved to \"{0}\"".format(save_path)
+
+  except:
+    Logger.Error("Could not save output to", save_path)

@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-class KiCadComponent:
+class KiCadComponent(object):
   """ Class that will represent a KiCad Component """
   def __init__(self, dictData=None, **kwargs):
     # Dictionary of data

@@ -4,6 +4,7 @@ import sys
 import Config
 import Arguments
 import Middleware
+import Logger
 
 from .format_registrar import FormatRegistrar
 
@@ -22,13 +23,12 @@ def Apply(components):
     formatter = registrar.Dispatch(cfg['defaultFormatter'])
 
     if formatter is None:
-      print("Error: Unkown Formatter {0}".format(args.formatter))
-      sys.exit(0)
+      Logger.Fatal("Unkown Formatter", args.formatter)
 
   # Run through the formatter
   output = formatter(components)
 
-  print(output)
+  Logger.Log(output)
 
   return output
 

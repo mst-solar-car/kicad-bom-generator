@@ -1,6 +1,7 @@
 __all__ = ['Wrapper', 'Register']
 
 import Config
+import Logger
 from .middleware_registrar import MiddlewareRegistrar
 
 cfg = Config.Get()
@@ -24,7 +25,7 @@ def Wrapper(fn):
       middlewareFn = registrar.Dispatch(middleware)
 
       if middlewareFn is None:
-        print("Unkown Middleware {0}".format(middleware))
+        Logger.Error("Unkown Middleware", middleware)
         continue
 
       # Apply the middleware

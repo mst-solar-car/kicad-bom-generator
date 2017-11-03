@@ -1,5 +1,6 @@
 from Singleton import *
-
+import Logger
+from Component import *
 
 @Singleton
 class MiddlewareRegistrar:
@@ -12,6 +13,7 @@ class MiddlewareRegistrar:
 
   def Register(self, name, fn):
     """ Registers some middleware """
+    Logger.Debug("Registering Middleware:", self.normalize(name))
     self._middleware[self.normalize(name)] = fn
 
   def Dispatch(self, name):
@@ -23,6 +25,19 @@ class MiddlewareRegistrar:
 
     def dispatchWrapper(components):
       """ Wrapper Function to apply middleware """
-      return self._middleware[name](components)
+      cpy = components.Copy() # Create a copy of the component list (to continue in pipeline if failure)
+      Logger.Debug("Running", name, "Middleware")
+      try:
+        result = self._middleware[name](components)
+
+        if type(result) is not KiCadComponentList:
+          Logger.Error("Middleware", name, "returned", type(result), "not KiCadComponentList--Restoring copy of components")
+          return cpy
+
+        return result
+
+      except Exception as e:
+        Logger.Error("Exception", e, "in", name, "Middleware--Restoring copy of components")
+        return cpy
 
     return dispatchWrapper

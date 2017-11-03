@@ -14,18 +14,6 @@ multiple_components = "{0}/multiple_components.sch".format(folder)
 multiple_components_duplicates = "{0}/multiple_components_duplicates.sch".format(folder)
 
 
-def components_equal(actual, expected):
-  """ Used for confirming that two components are exactly the same """
-  for key in actual:
-    if key not in expected:
-      return False # Key is missing
-
-    if expected[key] != actual[key]:
-      return False # Values are differen t
-
-  return True # Components are the same
-
-
 def test_parse_simple_component_single_file():
   """ Checks that parsing a single file with a single component in it works """
   # Arrange

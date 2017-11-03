@@ -10,6 +10,8 @@ internal workings, you can modify, upgrade, and extend this program to your hear
 # Parser
 The parser should remain pretty much the same, the goal of this module is to read in `.sch` files, and build a list of components that are used in each one. And then return this so it can be sent to middleware.
 
+The parser will pull all the field data from components, so if you want any special information (part numbers, serial numbers, datasheets, etc...) then you will need to add that information for each component (or better yet, add it to the component in the component library).
+
 # Middleware
 This program implements what is known as middleware. Middleware runs between
 parsing and retrieving components and the formatter. It can be responsible for a lot

@@ -1,3 +1,3 @@
-__all__ = ['GetComponentsFromFiles']
+__all__ = ['GetComponentsFromNetlist']
 
-from .schematic_parser import *
+from .netlist_parser import *

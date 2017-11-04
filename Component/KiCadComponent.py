@@ -20,7 +20,7 @@ class KiCadComponent(object):
   def Hash(self):
     """ Return a hash that is used to uniquely identify components """
     def norm(s):
-      return s.lower().replace(' ', '-')
+      return s.lower().replace(' ', '_')
 
     name = norm(self.data["name"])
     footprint = norm(self.data["footprint"])

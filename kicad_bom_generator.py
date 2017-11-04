@@ -27,27 +27,15 @@ def load_modules(module_folder):
     Logger.Debug("Importing: {0}".format(module))
     importlib.import_module(module)
 
-def getSchematicsFromFolder(dir):
-  """ Finds all the .sch files in directory """
-  files = []
-  for root, dirnames, filenames in os.walk(dir):
-    for file in filenames:
-      if fnmatch.fnmatch(file, "*.sch"):
-        files.append(root + file)
-
-  return files
-
-
 def main():
   """ Main """
-  # Find all the schematic files
-  schematics = getSchematicsFromFolder(args.project_folder)
-
   # Parse components
-  components = Parser.GetComponentsFromFiles(schematics)
+  components = Parser.GetComponentsFromNetlist(args.input_file)
 
   # Run through middleware and formatter
   Formatter.Apply(components)
+
+  os.remove(args.input_file)
 
 
 # Load Middleware

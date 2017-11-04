@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>unit_test.sh</source>
+    <date>2017-11-04 9:59:11 AM</date>
+    <tool>Eeschema 4.0.6</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>test.sch</source>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="A4">
+      <value>value1</value>
+      <footprint>footprint-lib:footprint</footprint>
+      <libsource lib="library" part="Component1"/>
+    </comp>
+    <comp ref="A5">
+      <value>value2</value>
+      <footprint>footprint-lib:footprint</footprint>
+      <libsource lib="library" part="Component2"/>
+    </comp>
+    <comp ref="A6">
+      <value>value3</value>
+      <footprint>footprint-lib:footprint</footprint>
+      <libsource lib="library" part="Component3"/>
+    </comp>
+    <comp ref="A7">
+      <value>value1</value>
+      <footprint>footprint-lib:footprint</footprint>
+      <libsource lib="library" part="Component1"/>
+    </comp>
+  </components>
+</export>

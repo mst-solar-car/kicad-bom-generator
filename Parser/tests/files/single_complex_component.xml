@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>unit_test.sh</source>
+    <date>2017-11-04 9:59:11 AM</date>
+    <tool>Eeschema 4.0.6</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>test.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+  <comp ref="A4">
+      <value>ComplexComponent-Value</value>
+      <footprint>footprint-lib:complex-footprint</footprint>
+      <datasheet>datasheet-url</datasheet>
+      <fields>
+        <field name="hopefully-this-is-not-an-alias">Digikey</field>
+        <field name="Hopefully this is not an alias2">666</field>
+      </fields>
+      <libsource lib="library" part="ComplexComponent"/>
+    </comp>
+  </components>
+</export>

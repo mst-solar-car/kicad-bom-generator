@@ -1,12 +1,11 @@
 import sys
-import os
 from copy import deepcopy
-
 import argparse
 
 import Config
 import Logger
 from Singleton import *
+from Utils import *
 
 
 cfg = Config.Get()
@@ -32,7 +31,7 @@ class ArgumentParser:
 
     self.output_file = self.args.output + "_BOM"
 
-    self.formatter = self.args.formatter
+    self.formatter = normalizeStr(self.args.formatter)
 
     # Remove the generated XML file
     if not self.args.netlist.endswith(".xml"):

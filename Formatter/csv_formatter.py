@@ -2,6 +2,7 @@ import Formatter
 import Config
 import Logger
 import Arguments
+from Utils import *
 
 args = Arguments.Parse()
 cfg = Config.Get()
@@ -13,11 +14,11 @@ def csv_formatter(components):
   columns = cfg['columns']
   nl = cfg['outputLineSeparator']
 
-  result = columns[0].replace('-', ' ').title()
+  result = denormalizeStr(columns[0])
 
   # Add column headers
   for column in columns[1:]:
-    result = result + "," + column.replace('-', ' ').title()
+    result = result + "," + denormalizeStr(column)
 
   # Add components
   for component in components:

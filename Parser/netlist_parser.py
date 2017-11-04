@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 import Config
 import Logger
 from Component import *
+from Utils import *
 
 cfg = Config.Get()
 
@@ -55,8 +56,8 @@ def buildComponent(component_tree):
   return component
 
 def getAlias(name):
-  """ Returns any aliases """
-  name = name.lower().replace(' ', '_')
+  """ Returns any aliases or the normalized name """
+  name = normalizeStr(name)
   if name in cfg['metadataAliases']:
     return cfg['metadataAliases'][name] # ALias found
 

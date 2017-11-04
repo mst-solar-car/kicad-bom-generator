@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+from Utils import *
+
 class KiCadComponent(object):
   """ Class that will represent a KiCad Component """
   def __init__(self, dictData=None, **kwargs):
@@ -15,16 +17,13 @@ class KiCadComponent(object):
     # Allow ititialization with a dictionary
     if type(dictData) is dict:
       for key in dictData:
-        self.data[key] = dictData[key]
+        self.data[normalizeStr(key)] = dictData[key]
 
   def Hash(self):
     """ Return a hash that is used to uniquely identify components """
-    def norm(s):
-      return s.lower().replace(' ', '_')
-
-    name = norm(self.data["name"])
-    footprint = norm(self.data["footprint"])
-    value = norm(self.data["value"])
+    name = normalizeStr(self.data["name"])
+    footprint = normalizeStr(self.data["footprint"])
+    value = normalizeStr(self.data["value"])
 
     return hash((name, footprint, value))
 
@@ -47,13 +46,14 @@ class KiCadComponent(object):
 
   def __getitem__(self, key):
     """ Index Operator Part 1 """
+    key = normalizeStr(key)
     if key not in self.data:
       return None
     return self.data[key]
 
   def __setitem__(self, key, value):
     """ Index Operator Part 2 """
-    self.data[key] = value
+    self.data[normalizeStr(key)] = value
 
   def __eq__(self, other):
     """ Check if two components are equal """

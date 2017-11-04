@@ -3,6 +3,7 @@ import os
 import Arguments
 import Formatter
 import Config
+from Utils import *
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
@@ -19,7 +20,7 @@ def excel_formatter(components):
   ws = wb.active
 
   # Add header row
-  ws.append([c.replace('-', ' ').title() for c in columns])
+  ws.append([denormalizeStr(c) for c in columns])
 
   # Format the header cells
   for cell in ws._cells_by_col(1, 1, len(columns), 1):

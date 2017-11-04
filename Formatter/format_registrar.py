@@ -1,6 +1,6 @@
 from Singleton import *
 import Logger
-
+from Utils import *
 
 @Singleton
 class FormatRegistrar:
@@ -8,20 +8,15 @@ class FormatRegistrar:
   def __init__(self):
     self._formatters = {} # Start with nothing registered
 
-  def normalize(self, s):
-    try:
-      return s.lower()
-    except:
-      return s # ?
-
   def Register(self, name, fn):
     """ Register a function that formats """
-    Logger.Debug("Registering Formatter:", self.normalize(name))
-    self._formatters[self.normalize(name)] = fn
+    name = normalizeStr(name)
+    Logger.Debug("Registering Formatter:", name)
+    self._formatters[name] = fn
 
   def Dispatch(self, name):
     """ Wrapper function to wrap around doing formatting """
-    name = self.normalize(name)
+    name = normalizeStr(name)
 
     if name not in self._formatters:
       return None

@@ -20,7 +20,7 @@ def Apply(components):
 
   if formatter is None:
     # Attempt to load formatter from config.json
-    formatter = registrar.Dispatch(cfg['defaultFormatter'])
+    formatter = registrar.Dispatch(cfg['formatter'])
 
     if formatter is None:
       Logger.Fatal("Unkown Formatter", args.formatter)

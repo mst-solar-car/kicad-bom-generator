@@ -1,6 +1,7 @@
 from Singleton import *
 import Logger
 from Component import *
+from Utils import *
 
 @Singleton
 class MiddlewareRegistrar:
@@ -8,17 +9,15 @@ class MiddlewareRegistrar:
   def __init__(self):
     self._middleware = {} # Start with nothing registered
 
-  def normalize(self, s):
-    return s.lower()
-
   def Register(self, name, fn):
     """ Registers some middleware """
-    Logger.Debug("Registering Middleware:", self.normalize(name))
-    self._middleware[self.normalize(name)] = fn
+    name = normalizeStr(name)
+    Logger.Debug("Registering Middleware:", name)
+    self._middleware[name] = fn
 
   def Dispatch(self, name):
     """ Returns a function to wrap around middleware """
-    name = self.normalize(name)
+    name = normalizeStr(name)
 
     if name not in self._middleware:
       return None

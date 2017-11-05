@@ -1,6 +1,7 @@
 {
   "formatter": "excel",
-  "middleware": ["sort"],
+	"middleware": ["sort"],
+	"afterware": ["test"],
 
   "debug": false,
   "verbose": false,

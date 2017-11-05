@@ -37,7 +37,7 @@ def csv_formatter(components):
       file.write(result)
 
     Logger.Debug("Output saved to", save_path)
-    return "BOM saved to \"{0}\"".format(save_path)
+    return save_path
 
   except:
     Logger.Error("Could not save output to", save_path)

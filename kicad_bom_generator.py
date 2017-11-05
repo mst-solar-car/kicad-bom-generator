@@ -4,9 +4,9 @@ import glob
 import importlib
 import fnmatch
 
+import Pipeline
 import Arguments
-import Formatter
-import Parser
+
 import Config
 import Logger
 
@@ -27,16 +27,6 @@ def load_modules(module_folder):
     Logger.Debug("Importing: {0}".format(module))
     importlib.import_module(module)
 
-def main():
-  """ Main """
-  # Parse components
-  components = Parser.GetComponentsFromNetlist(args.input_file)
-
-  # Run through middleware and formatter
-  Formatter.Apply(components)
-
-  os.remove(args.input_file)
-
 
 # Load Middleware
 load_modules("Middleware")
@@ -44,5 +34,8 @@ load_modules("Middleware")
 # Load Formatters
 load_modules("Formatter")
 
+
 if __name__ == "__main__":
-  main()
+  # Run the input file through the pipeline
+  Pipeline.RunOnValue(args.input_file)
+  os.remove(args.input_file)

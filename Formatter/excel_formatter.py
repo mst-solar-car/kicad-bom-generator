@@ -3,6 +3,7 @@ import os
 import Arguments
 import Formatter
 import Config
+import Logger
 from Utils import *
 
 from openpyxl import Workbook
@@ -43,4 +44,4 @@ def excel_formatter(components):
   save_path = "{0}.xlsx".format(args.output_file)
   wb.save(save_path)
 
-  return "BOM saved to \"{0}\"".format(save_path)
+  return save_path

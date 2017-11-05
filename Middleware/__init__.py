@@ -1,4 +1,4 @@
-__all__ = ['Wrapper', 'Register']
+__all__ = ['Pipeline', 'Register', 'Apply']
 
 import Config
 import Logger
@@ -12,16 +12,22 @@ def Register(name):
   """ Decorator for Registering Middleware """
   def wrapper(middlewareFn):
     registrar.Register(name, middlewareFn)
-    return registrar.Dispatch(name)
+    return middlewareFn
 
   return wrapper
 
 
-def Wrapper(fn):
-  """ Middleware wrapper for a component list """
+def Pipeline(nextInPipeline):
+  """ Decorator for using middleware in a pipeline (not the middleware pipeline) """
   def wrapper(components):
-    # Run through middleware pipeline
-    for middleware in cfg['middleware']:
+    return nextInPipeline(Apply(components))
+
+  return wrapper
+
+
+def Apply(components):
+  """ Applies middleware to a list of components """
+  for middleware in cfg['middleware']:
       middlewareFn = registrar.Dispatch(middleware)
 
       if middlewareFn is None:
@@ -31,7 +37,4 @@ def Wrapper(fn):
       # Apply the middleware
       components = middlewareFn(components)
 
-    # Run the components through the wrapped function and return the value
-    return fn(components)
-
-  return wrapper
+  return components

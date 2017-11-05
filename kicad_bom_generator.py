@@ -34,6 +34,9 @@ load_modules("Middleware")
 # Load Formatters
 load_modules("Formatter")
 
+# Load Afterware
+load_modules("Afterware")
+
 
 if __name__ == "__main__":
   # Run the input file through the pipeline

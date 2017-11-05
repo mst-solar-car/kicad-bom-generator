@@ -21,6 +21,7 @@ class Configuration:
     # Create entries for these if they don't exist
     self.Get('formatter', '')
     self.Get('middleware', [])
+    self.Get('afterware', [])
     self.Get('columns', [])
     self.Get('metadataAliases', {})
     self.Get('emptyValue', '')
@@ -29,6 +30,7 @@ class Configuration:
     # Normalize strings
     self.data['formatter'] = normalizeStr(self.data['formatter'])
     self.data['middleware'] = [ normalizeStr(m) for m in self.data['middleware'] ]
+    self.data['afterware'] = [ normalizeStr(a) for a in self.data['afterware'] ]
     self.data['metadataAliases'] = { normalizeStr(key): normalizeStr(value) for key, value in self.data['metadataAliases'].items() }
     self.data['columns'] = [ normalizeStr(c) for c in self.data['columns'] ]
 

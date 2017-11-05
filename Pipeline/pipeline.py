@@ -1,11 +1,13 @@
 import Parser
 import Middleware
 import Formatter
+import Afterware
 import Logger
 
 @Parser.Pipeline
 @Middleware.Pipeline
 @Formatter.Pipeline
+@Afterware.Pipeline
 def PerformPipeline(result):
   """ End of the pipeline """
   Logger.Debug("Pipeline returned:", result)

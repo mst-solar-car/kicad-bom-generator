@@ -92,6 +92,7 @@ Name | Type | Description
 -----|------|-------------
 `formatter` | string | The formatter to use if no formatter is speficied in the argumnets
 `middleware` | []string | This is the list of middleware to run the component list through, *order matters*. This is referred to as the *middleware pipeline*.
+`afterware` | []string | This is the list of afterware to run, *order matters*. This is referred to as the *afteware pipeline*.
 `metadataAliases` | object | This object will allow for common variants of metadata to point to another metadata value. This should be a dictionary, e.g.: `{ "alias": "real_name" }`
 `columns` | []string | the metadata names for the columns to show, *order matters*.
 `outputLineSeparator` | string | If you are outputing in CSV format then this is what will be used to separate rows. This can be anything you want, a good default value is: "`\n`"
@@ -102,6 +103,7 @@ Here is a complete example of `config.json`:
 {
   "formatter": "excel",
   "middleware": ["sort"],
+  "afterware": [],
 
   "debug": false,
   "verbose": false,

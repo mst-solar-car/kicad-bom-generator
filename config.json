@@ -7,13 +7,13 @@
   "verbose": false,
 
   "metadataAliases": {
-    "supplier": "supplier-name",
-    "supplier-part-number": "supplier-part",
-    "manufacturer": "manufacturer-name",
-    "manufacturer-part-number": "manufacturer-part"
+    "supplier": "supplier_name",
+    "supplier_part": "supplier_part_number",
+    "manufacturer": "manufacturer_name",
+    "manufacturer_part": "manufacturer_part_number"
   },
 
-  "columns": ["name", "supplier-name", "supplier-part", "quantity", "reference"],
+  "columns": ["name", "supplier_name", "supplier_part_number", "quantity", "reference"],
 
   "outputLineSeparator": "\n"
 }

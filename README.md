@@ -110,12 +110,12 @@ Here is a complete example of `config.json`:
 
   "metadataAliases": {
     "supplier": "supplier_name",
-    "supplier_part_number": "supplier_part",
+    "supplier_part": "supplier_part_number",
     "manufacturer": "manufacturer_name",
-    "manufacturer_part_number": "manufacturer_part"
+    "manufacturer_part": "manufacturer_part_number"
   },
 
-  "columns": ["name", "supplier_name", "supplier_part", "quantity", "reference"],
+  "columns": ["name", "supplier_name", "supplier_part_number", "quantity", "reference"],
 
   "outputLineSeparator": "\n"
 }

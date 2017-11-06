@@ -1,3 +1,9 @@
+"""
+@package
+Super configurable, and extensible BOM generator for KiCad.
+
+Built by Michael Rouse at the Missouri S&T Solar Car Team
+"""
 import sys
 import os
 import glob

@@ -6,8 +6,7 @@ import Config
 import Logger
 from Utils import *
 
-from openpyxl import Workbook
-from openpyxl.styles import Alignment
+import xlsxwriter
 
 args = Arguments.Parse()
 cfg = Config.Get()
@@ -15,33 +14,42 @@ cfg = Config.Get()
 @Formatter.Register("excel")
 def excel_formatter(components):
   """ Formats a list of components into an excel spreadsheet """
-  columns = cfg['columns']
-
-  wb = Workbook()
-  ws = wb.active
-
-  # Add header row
-  ws.append([denormalizeStr(c) for c in columns])
-
-  # Format the header cells
-  for cell in ws._cells_by_col(1, 1, len(columns), 1):
-    cell[0].style= 'Headline 1'
-    cell[0].alignment = Alignment(horizontal='center')
-
-  # Add a row for all the components
-  for component in components:
-    row = []
-
-    for column in columns:
-      try:
-        row.append(component[column])
-      except:
-        row.append(cfg['emptyValue'])
-
-    ws.append(row)
-
-  # Save the excel file
   save_path = "{0}.xlsx".format(args.output_file)
-  wb.save(save_path)
+
+  workbook = xlsxwriter.Workbook(save_path)
+  ws = workbook.add_worksheet('BOM')
+
+  # Create styling for the header titles
+  header_style = workbook.add_format({
+    'font_size': 16,
+    'bold': True,
+    'align': 'center',
+    'bottom': 2,
+    'right': 1,
+  })
+
+  # Create styling for general row
+  row_style = workbook.add_format({
+    'right': 1,
+    'bottom': 1
+  })
+
+  columns = cfg['columns'] # List of columns
+
+  # Add the columns to the file
+  for col in range(0, len(columns)):
+    ws.write(0, col, denormalizeStr(columns[col]), header_style)
+
+  # Add a row for each component
+  for row in range(0, len(components)):
+    for col in range(0, len(columns)):
+      try:
+        ws.write(row + 1, col, components[row][columns[col]], row_style)
+      except:
+        ws.write(row + 1, col, cfg['emptyValue'], row_style)
+
+  # Close the file
+  workbook.close()
 
   return save_path
+

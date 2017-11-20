@@ -30,7 +30,7 @@ def json_formatter(components):
   result = json.dumps(newList)
 
    # Save the json file
-  save_path = "{0}.json".format(args.output_file)
+  save_path = args.output_file
   try:
     with open(save_path, "w") as file:
       file.write(result)

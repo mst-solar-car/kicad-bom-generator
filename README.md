@@ -63,14 +63,14 @@ Now, whenever you are ready to generate your BOM, just select the name that you 
 
 
 ## Changing Output Format
-If you want to *temporarily* change the output type, in the "`Command Line`" field when you have the plugin selected add `"formatter-name"` to the end (separated by a space from the thing before it [including quotes]). And then click "`Generate`"
+If you want to *temporarily* change the output type, in the "`Command Line`" field when you have the plugin selected add the file extension of the formatter to the second parameter. And then click "`Generate`"
 
 ### Example
 Here are some examples of what you can put in the "`Command line`" field in KiCad:
 
-`python "[path]\kicad_bom_generator.py" "%I" "%O" "excel"` would output in Excel format
+`python "[path]\kicad_bom_generator.py" "%I" "%O.xlsx"` would output in Excel format
 
-`python "[path]\kicad_bom_generator.py" "%I" "%O" "csv"` would output in CSV
+`python "[path]\kicad_bom_generator.py" "%I" "%O.csv"` would output in CSV
 
 `python "[path]\kciad_bom_generator.py" "%I" "%O"` would output in the formatter specified in `config.json` (see below) or error (if nothing is set in the config)
 
@@ -101,7 +101,7 @@ Name | Type | Description
 Here is a complete example of `config.json`:
 ```json
 {
-  "formatter": "excel",
+  "formatter": "xlsx",
   "middleware": ["sort"],
   "afterware": [],
 

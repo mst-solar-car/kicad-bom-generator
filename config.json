@@ -1,5 +1,5 @@
 {
-  "formatter": "excel",
+  "formatter": "xlsx",
 	"middleware": ["sort"],
 	"afterware": [],
 

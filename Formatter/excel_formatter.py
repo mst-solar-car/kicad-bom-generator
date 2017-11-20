@@ -11,10 +11,10 @@ import xlsxwriter
 args = Arguments.Parse()
 cfg = Config.Get()
 
-@Formatter.Register("excel")
+@Formatter.Register("xlsx")
 def excel_formatter(components):
   """ Formats a list of components into an excel spreadsheet """
-  save_path = "{0}.xlsx".format(args.output_file)
+  save_path = args.output_file
 
   workbook = xlsxwriter.Workbook(save_path)
   ws = workbook.add_worksheet('BOM')

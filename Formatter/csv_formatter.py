@@ -31,7 +31,7 @@ def csv_formatter(components):
         result = result + "," + str(cfg['emptyValue'])
 
   # Save the csv file
-  save_path = "{0}.csv".format(args.output_file)
+  save_path = args.output_file
   try:
     with open(save_path, "w") as file:
       file.write(result)

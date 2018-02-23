@@ -2,6 +2,7 @@
 Formatters are what turn a list of components into a format that can easily be read by humans, or by computers.
 
 By default, this program allows for the following output formats:
+
 Name | Extension | Source |
 -----|-----------|---------|
 Excel | `.xlsx` | [source](excel_formatter.py) |

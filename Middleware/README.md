@@ -6,7 +6,7 @@ It has the power to completely alter a component list, contact external services
 
 Some examples of cool potential middleware:
 - Using the DigiKey API to find prices or part numbers
-- Looking up the part in data base to find internal part numbers, etc...
+- Looking up the part in database to find internal part numbers, etc...
 
 
 # How Middleware Works
@@ -32,7 +32,8 @@ import Middleware
 ```
 
 ## Step 3
-Create a function for your middleware that has registers it using a decorator
+Create a function for your middleware that registers it using the decorator.
+
 This function must accept a list of components, and must return a list of components
 
 ```py

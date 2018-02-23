@@ -13,7 +13,7 @@
     "manufacturer_part": "manufacturer_part_number"
   },
 
-  "columns": ["name", "supplier_name", "supplier_part_number", "quantity", "reference"],
+  "columns": ["name", "value", "supplier_name", "supplier_part_number", "quantity", "reference"],
 
   "outputLineSeparator": "\n"
 }
